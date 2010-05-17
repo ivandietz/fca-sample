@@ -24,8 +24,10 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
@@ -44,6 +46,7 @@ import fca_sample.ClassifiedTableItem;
 import fca_sample.Classifier;
 import fca_sample.Criteria;
 import fca_sample.FCAImplementation;
+import fca_sample.TreeUtils;
 
 public class Window {
 
@@ -185,8 +188,18 @@ public class Window {
             lblRunning.setBounds(193, 164, 66, 13);
           }
           {
-            tree = new Tree(composite, SWT.BORDER | SWT.CHECK | SWT.V_SCROLL | SWT.H_SCROLL);
+            tree = new Tree(composite, SWT.CHECK);
             tree.setBounds(332, 42, 300, 444);
+            tree.addListener(SWT.Selection, new Listener() {
+              public void handleEvent(Event event) {
+                  if (event.detail == SWT.CHECK) {
+                      TreeItem item = (TreeItem) event.item;
+                      boolean checked = item.getChecked();
+                      TreeUtils.checkItems(item, checked);
+                      TreeUtils.checkPath(item.getParentItem(), checked, false);
+                  }
+              }
+          });
           }
         }
       }
