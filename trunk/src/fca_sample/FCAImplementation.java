@@ -18,6 +18,8 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.text.Document;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
 
 import colibri.lib.Concept;
 import colibri.lib.HybridLattice;
@@ -32,26 +34,24 @@ public class FCAImplementation {
   private HashMap<String, String> hierarchy = null;  
 
   public FCAImplementation(IProject project, boolean useClasses,
-      boolean useMethods, boolean useParams) throws CoreException {
+      boolean useMethods, boolean useParams, HashMap packagesMap) throws CoreException {
     hierarchy = new HashMap<String,String>();
     if (project.isNatureEnabled("org.eclipse.jdt.core.javanature")) {
       IJavaProject javaProject = JavaCore.create(project);
-      createLattice(javaProject, useClasses, useMethods, useParams);
+      createLattice(javaProject, useClasses, useMethods, useParams, packagesMap);
     }
   }
 
   private void createLattice(IJavaProject javaProject, boolean useClasses,
-      boolean useMethods, boolean useParams) throws JavaModelException {
+      boolean useMethods, boolean useParams, HashMap<String, TreeItem> packagesMap) throws JavaModelException {
     Relation rel = new TreeRelation();
     Pattern p = Pattern.compile("[a-zA-Z]{1}[a-z]*");
     Matcher matcher;
 
     IPackageFragment[] packages = javaProject.getPackageFragments();
     for (IPackageFragment mypackage : packages) {
-      // Package fragments include all packages in the classpath
-      // We will only look at the package from the source folder
-      // K_BINARY would include also included JARS, e.g. rt.jar
-      if (mypackage.getKind() == IPackageFragmentRoot.K_SOURCE) {
+      // Tomamos todos los paquetes de la carpeta source, que hayan sido seleccionados en el tree.
+      if (mypackage.getKind() == IPackageFragmentRoot.K_SOURCE && packagesMap.get(mypackage.getElementName()).getChecked()) {
         for (ICompilationUnit unit : mypackage.getCompilationUnits()) {
           Document doc = new Document(unit.getSource());
           IType[] allTypes = unit.getAllTypes();
@@ -102,7 +102,8 @@ public class FCAImplementation {
     return concepts;
   }
   
-  public HashMap getHierarchy(){
+  public HashMap getHierarchy() {
     return hierarchy;
   }
+  
 }
