@@ -53,6 +53,7 @@ public class Window {
   protected Shell shlFcaSample;
   private Combo projectsCombo;
   private Tree tree;
+  private HashMap<String, TreeItem> packagesMap;
   private Button btnClasses;
   private Button btnMethods;
   private Button btnParameters;
@@ -142,7 +143,7 @@ public class Window {
                 if (!projectsCombo.getText().equals("")) {
                   try {
                     lblRunning.setText("Running...");
-                    fca = new FCAImplementation(projectsMap.get(projectsCombo.getText()), btnClasses.getSelection(), btnMethods.getSelection(), btnParameters.getSelection());
+                    fca = new FCAImplementation(projectsMap.get(projectsCombo.getText()), btnClasses.getSelection(), btnMethods.getSelection(), btnParameters.getSelection(), packagesMap);
                     showResults(fca.getConcepts());
                     lblRunning.setText("");
                   } catch (CoreException e1) {
@@ -200,6 +201,7 @@ public class Window {
                   }
               }
           });
+            packagesMap = new HashMap<String, TreeItem>();
           }
         }
       }
@@ -493,7 +495,7 @@ public class Window {
   
   private void fillTree(IProject project) {
     tree.removeAll();
-    HashMap<String, TreeItem> hash = new HashMap<String, TreeItem>();
+    packagesMap.clear();
     try {
       if (project.isNatureEnabled("org.eclipse.jdt.core.javanature")) {
         IJavaProject javaProject = JavaCore.create(project);
@@ -508,13 +510,13 @@ public class Window {
               else
                 packageName = mypackage.getElementName();
               itemTree.setText(packageName);
-              hash.put(mypackage.getElementName(), itemTree);
+              packagesMap.put(mypackage.getElementName(), itemTree);
             } else {
               String elementName = mypackage.getElementName();
-              TreeItem parent = hash.get(elementName.substring(0, elementName.lastIndexOf(".")));
+              TreeItem parent = packagesMap.get(elementName.substring(0, elementName.lastIndexOf(".")));
               TreeItem itemTree = new TreeItem(parent, SWT.NONE);
               itemTree.setText(elementName.substring(elementName.lastIndexOf(".") + 1, elementName.length()));
-              hash.put(elementName, itemTree);
+              packagesMap.put(elementName, itemTree);
             }
           }
         }

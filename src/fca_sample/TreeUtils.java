@@ -2,6 +2,7 @@ package fca_sample;
 
 import org.eclipse.swt.widgets.TreeItem;
 
+//TODO Revisar el tema de los greyed, si selecciono un paquete hijo, se selecciona el padre tb? 
 public class TreeUtils {
 
   public static void checkPath(TreeItem item, boolean checked, boolean grayed) {
