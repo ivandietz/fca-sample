@@ -20,6 +20,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -510,6 +511,7 @@ public class Window {
               else
                 packageName = mypackage.getElementName();
               itemTree.setText(packageName);
+//              itemTree.setImage(new Image(itemTree.getDisplay(), "icons/package_obj.gif"));
               packagesMap.put(mypackage.getElementName(), itemTree);
             } else {
               String elementName = mypackage.getElementName();
