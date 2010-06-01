@@ -18,7 +18,6 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.text.Document;
-import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
 import colibri.lib.Concept;
@@ -53,29 +52,31 @@ public class FCAImplementation {
       // Tomamos todos los paquetes de la carpeta source, que hayan sido seleccionados en el tree.
       if (mypackage.getKind() == IPackageFragmentRoot.K_SOURCE && packagesMap.get(mypackage.getElementName()).getChecked()) {
         for (ICompilationUnit unit : mypackage.getCompilationUnits()) {
-          Document doc = new Document(unit.getSource());
-          IType[] allTypes = unit.getAllTypes();
-          for (IType type : allTypes) {
-            hierarchy.put(type.getElementName(), type.getSuperclassName());
-            matcher = p.matcher(type.getElementName());
-            while (matcher.find()) {
-              if (useClasses && !Filter.isStopWord(matcher.group().toLowerCase()))
-                rel.add(type.getElementName(), matcher.group().toLowerCase());
-            }
-            IMethod[] methods = type.getMethods();
-            for (IMethod method : methods) {
-              matcher = p.matcher(method.getElementName());
+          if (packagesMap.get(unit.getPath().toString()).getChecked()) {
+            Document doc = new Document(unit.getSource());
+            IType[] allTypes = unit.getAllTypes();
+            for (IType type : allTypes) {
+              hierarchy.put(type.getElementName(), type.getSuperclassName());
+              matcher = p.matcher(type.getElementName());
               while (matcher.find()) {
-                if (useMethods && !Filter.isStopWord(matcher.group().toLowerCase()))
-                  if (!type.getElementName().equals(method.getElementName()))
-                    rel.add(type.getElementName() + ":" + method.getElementName(), matcher.group().toLowerCase());
+                if (useClasses && !Filter.isStopWord(matcher.group().toLowerCase()))
+                  rel.add(type.getElementName(), matcher.group().toLowerCase());
               }
-              String[] parameterNames = method.getParameterNames();
-              for (int i = 0; i < parameterNames.length; i++) {
-                matcher = p.matcher(parameterNames[i]);
+              IMethod[] methods = type.getMethods();
+              for (IMethod method : methods) {
+                matcher = p.matcher(method.getElementName());
                 while (matcher.find()) {
-                  if (useParams && !Filter.isStopWord(matcher.group().toLowerCase()))
-                    rel.add(type.getElementName() + ":" + method.getElementName() + ":" + parameterNames[i], matcher.group().toLowerCase());
+                  if (useMethods && !Filter.isStopWord(matcher.group().toLowerCase()))
+                    if (!type.getElementName().equals(method.getElementName()))
+                      rel.add(type.getElementName() + ":" + method.getElementName(), matcher.group().toLowerCase());
+                }
+                String[] parameterNames = method.getParameterNames();
+                for (int i = 0; i < parameterNames.length; i++) {
+                  matcher = p.matcher(parameterNames[i]);
+                  while (matcher.find()) {
+                    if (useParams && !Filter.isStopWord(matcher.group().toLowerCase()))
+                      rel.add(type.getElementName() + ":" + method.getElementName() + ":" + parameterNames[i], matcher.group().toLowerCase());
+                  }
                 }
               }
             }
@@ -101,9 +102,9 @@ public class FCAImplementation {
     }
     return concepts;
   }
-  
+
   public HashMap getHierarchy() {
     return hierarchy;
   }
-  
+
 }

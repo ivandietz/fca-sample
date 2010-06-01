@@ -11,6 +11,7 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
@@ -511,14 +512,29 @@ public class Window {
               else
                 packageName = mypackage.getElementName();
               itemTree.setText(packageName);
-//              itemTree.setImage(new Image(itemTree.getDisplay(), "icons/package_obj.gif"));
+              itemTree.setImage(new Image(itemTree.getDisplay(), this.getClass().getResourceAsStream("/icons/package_obj.gif")));
               packagesMap.put(mypackage.getElementName(), itemTree);
+              for (ICompilationUnit unit : mypackage.getCompilationUnits()) {
+                TreeItem itemTreeClass = new TreeItem(itemTree, SWT.NONE);
+                String className = unit.getPath().toString().replace(".java", "");
+                itemTreeClass.setText(className.substring(className.lastIndexOf("/") + 1, className.length()));
+                itemTreeClass.setImage(new Image(itemTree.getDisplay(), this.getClass().getResourceAsStream("/icons/class_obj.gif")));
+                packagesMap.put(unit.getPath().toString(), itemTreeClass);
+              }
             } else {
               String elementName = mypackage.getElementName();
               TreeItem parent = packagesMap.get(elementName.substring(0, elementName.lastIndexOf(".")));
               TreeItem itemTree = new TreeItem(parent, SWT.NONE);
               itemTree.setText(elementName.substring(elementName.lastIndexOf(".") + 1, elementName.length()));
+              itemTree.setImage(new Image(itemTree.getDisplay(), this.getClass().getResourceAsStream("/icons/package_obj.gif")));
               packagesMap.put(elementName, itemTree);
+              for (ICompilationUnit unit : mypackage.getCompilationUnits()) {
+                TreeItem itemTreeClass = new TreeItem(itemTree, SWT.NONE);
+                String className = unit.getPath().toString().replace(".java", "");
+                itemTreeClass.setText(className.substring(className.lastIndexOf("/") + 1, className.length()));
+                itemTreeClass.setImage(new Image(itemTree.getDisplay(), this.getClass().getResourceAsStream("/icons/class_obj.gif")));
+                packagesMap.put(unit.getPath().toString(), itemTreeClass);
+              }
             }
           }
         }
