@@ -50,6 +50,7 @@ import fca_sample.Criteria;
 import fca_sample.FCAImplementation;
 import fca_sample.TreeUtils;
 
+// TODO sacar columna de detalles en las tablas de la izquierda.
 public class Window {
 
   protected Shell shlFcaSample;
@@ -232,10 +233,10 @@ public class Window {
           {
             Group grpLatticeConcepts = new Group(composite, SWT.NONE);
             grpLatticeConcepts.setText("Lattice Concepts");
-            grpLatticeConcepts.setBounds(10, 10, 460, 447);
+            grpLatticeConcepts.setBounds(10, 10, 332, 447);
             {
               resultsTable = new Table(grpLatticeConcepts, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION);
-              resultsTable.setBounds(10, 21, 440, 416);
+              resultsTable.setBounds(10, 21, 316, 416);
               resultsTable.setLinesVisible(true);
               resultsTable.setHeaderVisible(true);
               {
@@ -266,25 +267,25 @@ public class Window {
           {
             Group grpConceptDetails = new Group(composite, SWT.NONE);
             grpConceptDetails.setText("Concept Details");
-            grpConceptDetails.setBounds(476, 10, 498, 447);
+            grpConceptDetails.setBounds(348, 10, 626, 447);
             {
               detailsTable = new Table(grpConceptDetails, SWT.BORDER | SWT.FULL_SELECTION);
-              detailsTable.setBounds(10, 46, 478, 391);
+              detailsTable.setBounds(10, 46, 606, 391);
               detailsTable.setHeaderVisible(true);
               detailsTable.setLinesVisible(true);
               {
                 TableColumn tblclmnClassName = new TableColumn(detailsTable, SWT.NONE);
-                tblclmnClassName.setWidth(134);
+                tblclmnClassName.setWidth(286);
                 tblclmnClassName.setText("Class Name");
               }
               {
                 TableColumn tblclmnMethodName = new TableColumn(detailsTable, SWT.NONE);
-                tblclmnMethodName.setWidth(143);
+                tblclmnMethodName.setWidth(172);
                 tblclmnMethodName.setText("Method Name");
               }
               {
                 TableColumn tblclmnParameterName = new TableColumn(detailsTable, SWT.NONE);
-                tblclmnParameterName.setWidth(125);
+                tblclmnParameterName.setWidth(142);
                 tblclmnParameterName.setText("Parameter Name");
               }
             }
@@ -310,7 +311,7 @@ public class Window {
           tbtmClassification.setControl(composite);
           {
             Group grpConcepts = new Group(composite, SWT.NONE);
-            grpConcepts.setBounds(10, 37, 460, 420);
+            grpConcepts.setBounds(10, 37, 332, 420);
             grpConcepts.setText("Concepts");
             {
               criteriaCombo = new Combo(composite, SWT.READ_ONLY);
@@ -336,7 +337,7 @@ public class Window {
               classifiedConceptsTable = new Table(grpConcepts, SWT.BORDER | SWT.FULL_SELECTION);
               classifiedConceptsTable.setLinesVisible(true);
               classifiedConceptsTable.setHeaderVisible(true);
-              classifiedConceptsTable.setBounds(10, 21, 440, 389);
+              classifiedConceptsTable.setBounds(10, 21, 316, 389);
               {
                 TableColumn tblclmnAttributes = new TableColumn(classifiedConceptsTable, SWT.NONE);
                 tblclmnAttributes.setWidth(155);
@@ -344,7 +345,7 @@ public class Window {
               }
               {
                 TableColumn tblclmnElements = new TableColumn(classifiedConceptsTable, SWT.NONE);
-                tblclmnElements.setWidth(191);
+                tblclmnElements.setWidth(143);
                 tblclmnElements.setText("Elements");
               }
               classifiedConceptsTable.addSelectionListener(new SelectionListener() {
@@ -364,26 +365,26 @@ public class Window {
           }
           {
             Group group = new Group(composite, SWT.NONE);
-            group.setBounds(476, 37, 498, 420);
+            group.setBounds(348, 37, 626, 420);
             group.setText("Concept Details");
             {
               classifiedDetailsTable = new Table(group, SWT.BORDER | SWT.FULL_SELECTION);
               classifiedDetailsTable.setLinesVisible(true);
               classifiedDetailsTable.setHeaderVisible(true);
-              classifiedDetailsTable.setBounds(10, 46, 478, 364);
+              classifiedDetailsTable.setBounds(10, 46, 606, 364);
               {
                 TableColumn tableColumn = new TableColumn(classifiedDetailsTable, SWT.NONE);
-                tableColumn.setWidth(147);
+                tableColumn.setWidth(286);
                 tableColumn.setText("Class Name");
               }
               {
                 TableColumn tableColumn = new TableColumn(classifiedDetailsTable, SWT.NONE);
-                tableColumn.setWidth(148);
+                tableColumn.setWidth(172);
                 tableColumn.setText("Method Name");
               }
               {
                 TableColumn tableColumn = new TableColumn(classifiedDetailsTable, SWT.NONE);
-                tableColumn.setWidth(137);
+                tableColumn.setWidth(142);
                 tableColumn.setText("Parameter Name");
               }
             }
@@ -391,7 +392,7 @@ public class Window {
               classifiedAttributeText = new Text(group, SWT.BORDER);
               classifiedAttributeText.setEnabled(false);
               classifiedAttributeText.setEditable(false);
-              classifiedAttributeText.setBounds(65, 21, 423, 19);
+              classifiedAttributeText.setBounds(65, 21, 551, 19);
             }
             {
               Label label = new Label(group, SWT.NONE);
@@ -406,6 +407,10 @@ public class Window {
           }
 
         }
+      }
+      {
+        TabItem tbtmQueLePonemo = new TabItem(tabFolder, SWT.NONE);
+        tbtmQueLePonemo.setText("Que le ponemo'?");
       }
     }
 

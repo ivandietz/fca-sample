@@ -11,7 +11,7 @@ public class Filter {
 			"an", "and", "another", "any","anyhow","anyone","anything","anyway", "anywhere", "are", "around", "as",  "at",
 			"back","be","became", "because","become","becomes", "becoming", "been", "before", "beforehand", "behind", "being",
 			"below", "beside", "besides", "between", "beyond", "bill", "both", "bottom","but", "by", "call", "can", "cannot",
-			"cant", "co", "con", "could", "couldnt", "cry", "de", "describe", "detail", "do", "done", "down", "due", "during",
+			"cant", "co", "con", "could", "couldnt", "cry", "de", "describe", "detail", "done", "down", "due", "during",
 			"each", "eg", "eight", "either", "eleven","else", "elsewhere", "empty", "enough", "etc", "even", "ever", "every",
 			"everyone", "everything", "everywhere", "except", "few", "fifteen", "fify", "fill", "find", "fire", "first", "five",
 			"for", "former", "formerly", "forty", "found", "four", "from", "front", "full", "further", "get", "give", "go", "had",
