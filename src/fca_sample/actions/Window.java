@@ -1,10 +1,13 @@
 package fca_sample.actions;
 
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
@@ -51,6 +54,9 @@ import fca_sample.FCAImplementation;
 import fca_sample.TreeUtils;
 
 // TODO sacar columna de detalles en las tablas de la izquierda.
+// TODO sacar el confirm de la ultima ventana
+// TODO implementar resto del algoritmo de agrupar
+// TODO mantener los check cuando ordena la primer tabla 
 public class Window {
 
   protected Shell shlFcaSample;
@@ -63,14 +69,20 @@ public class Window {
   private Label lblRunning;
   private Map<String, IProject> projectsMap;
   private Table resultsTable;
+  boolean resultsTableOrderAscendant = true;
   private Table detailsTable;
   private Text attributesText;
   private Table classifiedConceptsTable;
+  boolean classifiedConceptsTableOrderAscendant = true;
   private Table classifiedDetailsTable;
   private Text classifiedAttributeText;
   private Combo criteriaCombo;
   private List<ClassifiedTableItem> classifiedItems = new ArrayList<ClassifiedTableItem>();
   FCAImplementation fca;
+  private Table grouped_concepts;
+  boolean groupedConceptsOrderAscendant = true;
+  private Table groupedDetailsTable;
+  private Text groupedAttributesText;
 
   /**
    * Launch the application.
@@ -221,6 +233,7 @@ public class Window {
               public void widgetSelected(SelectionEvent e) {
                 TableItem[] items = resultsTable.getItems();
                 classifyConcepts(items);
+                groupCrosscuttingMethods();
                 classifiedConceptsTable.removeAll();
                 classifiedDetailsTable.removeAll();
                 classifiedAttributeText.setText("");
@@ -243,6 +256,30 @@ public class Window {
                 TableColumn tblclmnAttributes_1 = new TableColumn(resultsTable, SWT.NONE);
                 tblclmnAttributes_1.setWidth(182);
                 tblclmnAttributes_1.setText("Attributes");
+                tblclmnAttributes_1.addListener(SWT.Selection, new Listener() {
+                  public void handleEvent(Event e) {
+                    // sort column 1
+                    TableItem[] items = resultsTable.getItems();
+                    Collator collator = Collator.getInstance(Locale.getDefault());
+                    for (int i = 1; i < items.length; i++) {
+                      String value1 = items[i].getText(0);
+                      for (int j = 0; j < i; j++) {
+                        String value2 = items[j].getText(0);
+                        if (collator.compare(value1, value2) < 0 && resultsTableOrderAscendant
+                            || collator.compare(value1, value2) > 0 && !resultsTableOrderAscendant) {
+                          String[] values = { items[i].getText(0),
+                              items[i].getText(1) };
+                          items[i].dispose();
+                          TableItem item = new TableItem(resultsTable, SWT.NONE, j);
+                          item.setText(values);
+                          items = resultsTable.getItems();
+                          break;
+                        }
+                      }
+                    }
+                    resultsTableOrderAscendant = !resultsTableOrderAscendant;
+                  }
+                });
               }
               {
                 TableColumn tblclmnElements_1 = new TableColumn(resultsTable, SWT.NONE);
@@ -342,6 +379,30 @@ public class Window {
                 TableColumn tblclmnAttributes = new TableColumn(classifiedConceptsTable, SWT.NONE);
                 tblclmnAttributes.setWidth(155);
                 tblclmnAttributes.setText("Attributes");
+                tblclmnAttributes.addListener(SWT.Selection, new Listener() {
+                  public void handleEvent(Event e) {
+                    // sort column 1
+                    TableItem[] items = classifiedConceptsTable.getItems();
+                    Collator collator = Collator.getInstance(Locale.getDefault());
+                    for (int i = 1; i < items.length; i++) {
+                      String value1 = items[i].getText(0);
+                      for (int j = 0; j < i; j++) {
+                        String value2 = items[j].getText(0);
+                        if (collator.compare(value1, value2) < 0 && classifiedConceptsTableOrderAscendant
+                            || collator.compare(value1, value2) > 0 && !classifiedConceptsTableOrderAscendant) {
+                          String[] values = { items[i].getText(0),
+                              items[i].getText(1) };
+                          items[i].dispose();
+                          TableItem item = new TableItem(classifiedConceptsTable, SWT.NONE, j);
+                          item.setText(values);
+                          items = classifiedConceptsTable.getItems();
+                          break;
+                        }
+                      }
+                    }
+                    classifiedConceptsTableOrderAscendant = !classifiedConceptsTableOrderAscendant;
+                  }
+                });
               }
               {
                 TableColumn tblclmnElements = new TableColumn(classifiedConceptsTable, SWT.NONE);
@@ -410,7 +471,111 @@ public class Window {
       }
       {
         TabItem tbtmQueLePonemo = new TabItem(tabFolder, SWT.NONE);
-        tbtmQueLePonemo.setText("Que le ponemo'?");
+        tbtmQueLePonemo.setText("Grouped Crosscuttings");
+        {
+          Composite composite = new Composite(tabFolder, SWT.NONE);
+          tbtmQueLePonemo.setControl(composite);
+          {
+            Button button = new Button(composite, SWT.NONE);
+            button.setText("Confirm");
+            button.setBounds(653, 463, 68, 23);
+          }
+          {
+            Group group = new Group(composite, SWT.NONE);
+            group.setText("Lattice Concepts");
+            group.setBounds(10, 10, 332, 447);
+            {
+              grouped_concepts = new Table(group, SWT.BORDER | SWT.FULL_SELECTION);
+              grouped_concepts.setLinesVisible(true);
+              grouped_concepts.setHeaderVisible(true);
+              grouped_concepts.setBounds(10, 21, 316, 416);
+              {
+                TableColumn tableColumn = new TableColumn(grouped_concepts, SWT.NONE);
+                tableColumn.setWidth(182);
+                tableColumn.setText("Attributes");
+                tableColumn.addListener(SWT.Selection, new Listener() {
+                  public void handleEvent(Event e) {
+                    // sort column 1
+                    TableItem[] items = grouped_concepts.getItems();
+                    Collator collator = Collator.getInstance(Locale.getDefault());
+                    for (int i = 1; i < items.length; i++) {
+                      String value1 = items[i].getText(0);
+                      for (int j = 0; j < i; j++) {
+                        String value2 = items[j].getText(0);
+                        if (collator.compare(value1, value2) < 0 && groupedConceptsOrderAscendant
+                            || collator.compare(value1, value2) > 0 && !groupedConceptsOrderAscendant) {
+                          String[] values = { items[i].getText(0),
+                              items[i].getText(1) };
+                          items[i].dispose();
+                          TableItem item = new TableItem(grouped_concepts, SWT.NONE, j);
+                          item.setText(values);
+                          items = grouped_concepts.getItems();
+                          break;
+                        }
+                      }
+                    }
+                    groupedConceptsOrderAscendant = !groupedConceptsOrderAscendant;
+                  }
+                });
+              }
+              {
+                TableColumn tableColumn = new TableColumn(grouped_concepts, SWT.NONE);
+                tableColumn.setWidth(242);
+                tableColumn.setText("Elements");
+              }
+              grouped_concepts.addSelectionListener(new SelectionListener() {
+                @Override
+                public void widgetDefaultSelected(SelectionEvent e) {
+                  groupedAttributesText.setText(grouped_concepts.getSelection()[0].getText(0));
+                  updateDetails(groupedDetailsTable, grouped_concepts.getSelection()[0]);
+                }
+
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                  groupedAttributesText.setText(grouped_concepts.getSelection()[0].getText(0));
+                  updateDetails(groupedDetailsTable, grouped_concepts.getSelection()[0]);
+                }
+              });
+            }
+          }
+          {
+            Group group = new Group(composite, SWT.NONE);
+            group.setText("Concept Details");
+            group.setBounds(348, 10, 626, 447);
+            {
+              groupedDetailsTable = new Table(group, SWT.BORDER | SWT.FULL_SELECTION);
+              groupedDetailsTable.setLinesVisible(true);
+              groupedDetailsTable.setHeaderVisible(true);
+              groupedDetailsTable.setBounds(10, 46, 606, 391);
+              {
+                TableColumn tableColumn = new TableColumn(groupedDetailsTable, SWT.NONE);
+                tableColumn.setWidth(286);
+                tableColumn.setText("Class Name");
+              }
+              {
+                TableColumn tableColumn = new TableColumn(groupedDetailsTable, SWT.NONE);
+                tableColumn.setWidth(172);
+                tableColumn.setText("Method Name");
+              }
+              {
+                TableColumn tableColumn = new TableColumn(groupedDetailsTable, SWT.NONE);
+                tableColumn.setWidth(142);
+                tableColumn.setText("Parameter Name");
+              }
+            }
+            {
+              groupedAttributesText = new Text(group, SWT.BORDER);
+              groupedAttributesText.setEnabled(false);
+              groupedAttributesText.setEditable(false);
+              groupedAttributesText.setBounds(65, 21, 423, 19);
+            }
+            {
+              Label label = new Label(group, SWT.NONE);
+              label.setText("Attributes:");
+              label.setBounds(10, 27, 49, 13);
+            }
+          }
+        }
       }
     }
 
@@ -551,4 +716,85 @@ public class Window {
     }
   }
   
+  /**
+   * Agrupa conceptos semanticamente relacionados (sinonimos, antonimos..)
+   */
+  void groupCrosscuttingMethods(){
+    Map<String, String> items = getCrosscuttingItems();
+    filterItems(items);
+    Set<String> keySet = items.keySet();
+    
+ // Clear tables
+    grouped_concepts.removeAll();
+    groupedDetailsTable.removeAll();
+    groupedAttributesText.setText("");
+    
+    // Fill results table
+    TableItem item = null;
+    for (Iterator iterator = keySet.iterator(); iterator.hasNext();) {
+      String key = (String) iterator.next();
+      item = new TableItem(grouped_concepts, SWT.NONE);
+      item.setText(0, key);
+      item.setText(1, items.get(key));
+    }
+    
+    for (Iterator iterator = keySet.iterator(); iterator.hasNext();) {
+      String key = (String) iterator.next();
+    }
+    
+    
+  }
+  
+  /**
+   * Obtiene los items cuyo Criteria sea Crosscutting Method.
+   * @return
+   */
+  private Map<String,String> getCrosscuttingItems(){
+    Map<String,String> map = new HashMap<String,String>();
+    for (Iterator iterator = classifiedItems.iterator(); iterator.hasNext();) {
+      ClassifiedTableItem classifiedItem = (ClassifiedTableItem) iterator.next();
+      if (classifiedItem.getCriteria().equals(Criteria.CROSSCUTTING_METHOD.getName())) {
+        map.put(classifiedItem.getItem().getText(0),classifiedItem.getItem().getText(1));        
+      }
+    }
+    return map;
+  }
+  
+  /**
+   * Quita los conceptos cuyos elementos sean subconjuntos de los elementos de otro concepto.
+   * @param items
+   * @return
+   */
+  private void filterItems(Map<String,String> items) {
+    Set<String> attributesSet = items.keySet();
+    String[] attributesArray = attributesSet.toArray(new String[0]);
+    for (int i = 0; i < attributesArray.length; i++) {
+      for (int j = i + 1; j < attributesArray.length; j++) {
+        if (isIncluded(attributesArray[i], attributesArray[j]))
+          items.remove(attributesArray[j]);
+        if (isIncluded(attributesArray[j], attributesArray[i]))
+          items.remove(attributesArray[i]);
+      }
+    }
+  }
+  
+  /**
+   * Devuelve true si los atrubutos en A estan incluidos en B.
+   * @param attributesA
+   * @param attributesB
+   * @return
+   */
+  public boolean isIncluded(String attributesA, String attributesB) {
+    String[] a = attributesA.split(", ");
+    String[] b = attributesB.split(", ");
+    boolean cont = true;
+    for (int i = 0; i < a.length && cont; i++) {
+      cont = false;
+      for (int j = 0; j < b.length && !cont; j++) {
+        if (a[i].equals(b[j]))
+          cont = true;
+      }
+    }
+    return cont;
+  }
 }
