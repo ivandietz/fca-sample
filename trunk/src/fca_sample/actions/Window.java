@@ -52,11 +52,16 @@ import fca_sample.Classifier;
 import fca_sample.Criteria;
 import fca_sample.FCAImplementation;
 import fca_sample.TreeUtils;
+import fca_sample.WordNetUtils;
 
-// TODO sacar columna de detalles en las tablas de la izquierda.
-// TODO sacar el confirm de la ultima ventana
-// TODO implementar resto del algoritmo de agrupar
-// TODO mantener los check cuando ordena la primer tabla 
+/**
+ * TODO En general:
+ * - sacar columna de detalles en las tablas de la izquierda
+ * - sacar el confirm de la ultima ventana
+ * - implementar resto del algoritmo de agrupar
+ * - mantener los check cuando ordena la primer tabla
+ * 
+ */
 public class Window {
 
   protected Shell shlFcaSample;
@@ -92,6 +97,9 @@ public class Window {
    */
   public static void main() {
     try {
+      // TODO Cambiar esto cuando terminemos
+      System.setProperty("wordnet.database.dir", "C:\\Archivos de programa\\WordNet\\2.1\\dict");
+      
       Window window = new Window();
       window.open();
     } catch (Exception e) {
@@ -721,15 +729,20 @@ public class Window {
    */
   void groupCrosscuttingMethods(){
     Map<String, String> items = getCrosscuttingItems();
-    filterItems(items);
-    Set<String> keySet = items.keySet();
     
- // Clear tables
+    // Filtramos elementos incluidos en otro concepto
+    filterItems(items);
+    
+    // Agrupamos los conceptos semanticamente relacionados
+    groupConcepts(items);
+    
+    // Clear tables
     grouped_concepts.removeAll();
     groupedDetailsTable.removeAll();
     groupedAttributesText.setText("");
     
     // Fill results table
+    Set<String> keySet = items.keySet();
     TableItem item = null;
     for (Iterator iterator = keySet.iterator(); iterator.hasNext();) {
       String key = (String) iterator.next();
@@ -796,5 +809,42 @@ public class Window {
       }
     }
     return cont;
+  }
+  
+  /**
+   * Agrupa conceptos relacionados utilizando WordNet
+   * @param items
+   */
+  public void groupConcepts(Map<String,String> items) {
+    Set<String> attributesSet = items.keySet();
+    String[] attributesArray = attributesSet.toArray(new String[0]);
+    for (int i = 0; i < attributesArray.length; i++) {
+      String[] attributesA = attributesArray[i].split(", ");
+      for (int j = i + 1; j < attributesArray.length; j++) {
+        String[] attributesB = attributesArray[j].split(", ");
+        // TODO completar metodo
+//        if (isRelated(attributesArray[i], attributesArray[j]))
+//          // crear el concepto nuevo que una los otros, y agregarlo a los items (reemplazando los otros dos) 
+      }
+    }
+  }
+  
+  /**
+   * TODO Revisar esto, puede que le falte una vuelta de rosca...
+   * Devuelve true si algun atrubuto en A esta relacionado con alguno de B.
+   * @param attributesA
+   * @param attributesB
+   * @return
+   */
+  public boolean isRelated(String attributesA, String attributesB) {
+    String[] a = attributesA.split(", ");
+    String[] b = attributesB.split(", ");
+    for (int i = 0; i < a.length; i++) {
+      for (int j = 0; j < b.length; j++) {
+        if (WordNetUtils.isRelated(a[i], b[j]))
+          return true;
+      }
+    }
+    return false;
   }
 }
