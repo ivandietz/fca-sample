@@ -1,48 +1,59 @@
 package fca_sample;
 
-import edu.smu.tspell.wordnet.NounSynset;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import edu.smu.tspell.wordnet.Synset;
 import edu.smu.tspell.wordnet.SynsetType;
-import edu.smu.tspell.wordnet.VerbSynset;
 import edu.smu.tspell.wordnet.WordNetDatabase;
+import edu.smu.tspell.wordnet.WordSense;
 
 public class TestWordNet {
 
   /**
+   * Test...
    * @param args
    */
   public static void main(String[] args) {
     System.setProperty("wordnet.database.dir", "C:\\Archivos de programa\\WordNet\\2.1\\dict");
-    NounSynset nounSynset;
-    NounSynset[] hyponyms;
-    VerbSynset verbSynset;
-    VerbSynset[] troponyms;
     
-
-    //VERBS
-    WordNetDatabase database = WordNetDatabase.getFileInstance();
-    Synset[] synsets = database.getSynsets("stop", SynsetType.VERB);
-    for (int i = 0; i < synsets.length; i++) {
-        verbSynset = (VerbSynset)(synsets[i]);
-        System.out.println("------ Definicion: " + verbSynset.getDefinition());
-        String[] wordForms = verbSynset.getWordForms();
-        System.out.println("- WordForms:");
-        for (int j = 0; j < wordForms.length; j++) {
-          System.out.println(wordForms[j]);
-        }
-        System.out.println("---- Troponimos:");
-        troponyms = verbSynset.getTroponyms();
-        for (int j = 0; j < troponyms.length; j++) {
-          String[] wordForms2 = troponyms[j].getWordForms();
-          System.out.println("- WordForms:");
-          for (int k = 0; k < wordForms2.length; k++) {
-            System.out.println(wordForms2[k]);
-          }
-        }
+    if (WordNetUtils.isRelated("start", "stop"))
+      System.out.println("SI");
+    else
+      System.out.println("NO");
     
     
+    //
+    // *** VIEJO ***
+    //
+//    NounSynset nounSynset;
+//    NounSynset[] hyponyms;
+//    VerbSynset verbSynset;
+//    VerbSynset[] troponyms;
     
-    //NOUNS
+//    //VERBS
+//    WordNetDatabase database = WordNetDatabase.getFileInstance();
+//    Synset[] synsets = database.getSynsets("stop", SynsetType.VERB);
+//    for (int i = 0; i < synsets.length; i++) {
+//        verbSynset = (VerbSynset)(synsets[i]);
+//        System.out.println("------ Definicion: " + verbSynset.getDefinition());
+//        String[] wordForms = verbSynset.getWordForms();
+//        System.out.println("- WordForms:");
+//        for (int j = 0; j < wordForms.length; j++) {
+//          System.out.println(wordForms[j]);
+//        }
+//        System.out.println("---- Troponimos:");
+//        troponyms = verbSynset.getTroponyms();
+//        for (int j = 0; j < troponyms.length; j++) {
+//          String[] wordForms2 = troponyms[j].getWordForms();
+//          System.out.println("- WordForms:");
+//          for (int k = 0; k < wordForms2.length; k++) {
+//            System.out.println(wordForms2[k]);
+//          }
+//        }
+//    
+//    //NOUNS
 //    WordNetDatabase database = WordNetDatabase.getFileInstance();
 //    Synset[] synsets = database.getSynsets("car", SynsetType.NOUN);
 //    for (int i = 0; i < synsets.length; i++) {
@@ -62,8 +73,6 @@ public class TestWordNet {
 //            System.out.println(wordForms2[k]);
 //          }
 //        }
-        
-        
 //        hyponyms = nounSynset.getHyponyms();
 ////        System.out.println(nounSynset.getWordForms()[0] +
 ////                ": " + nounSynset.getDefinition() + ") has " + hyponyms.length + " hyponyms");
@@ -71,6 +80,6 @@ public class TestWordNet {
 //          System.out.println(hyponyms[j]);
 //          
 //        }
-    } 
+//    } 
   }
 }
