@@ -18,6 +18,9 @@ public final class WordNetUtils {
    * @return
    */
   public static boolean isRelated(String a, String b) {
+    if (a.equals(b))
+      return true;
+    
     List<String> synonymsA;
     List<String> synonymsB;
     List<String> antonymsA;
@@ -76,6 +79,12 @@ public final class WordNetUtils {
           antonyms.add(wordForm);
       }
     }
+    //parches (casos no provistos por wordnet)
+    if (word.equals("start"))
+      antonyms.add("end");
+    if (word.equals("end"))
+      antonyms.add("start");
+    
     return antonyms;
   }
   

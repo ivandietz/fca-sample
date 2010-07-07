@@ -3,6 +3,7 @@ package fca_sample.actions;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -60,6 +61,7 @@ import fca_sample.WordNetUtils;
  * - sacar el confirm de la ultima ventana
  * - implementar resto del algoritmo de agrupar
  * - mantener los check cuando ordena la primer tabla
+ * - el agrupamiento mejor hacerlo con un boton en la ultima pestaña, tarda mucho hacerlo en el confirm de la 2da
  * 
  */
 public class Window {
@@ -97,7 +99,7 @@ public class Window {
    */
   public static void main() {
     try {
-      // TODO Cambiar esto cuando terminemos
+      // TODO Cambiar esto..
       System.setProperty("wordnet.database.dir", "C:\\Archivos de programa\\WordNet\\2.1\\dict");
       
       Window window = new Window();
@@ -647,6 +649,7 @@ public class Window {
   }
 
   private void classifyConcepts(TableItem[] items) {
+    classifiedItems.clear();
     for (int i = 0; i < items.length; i++) {
       if (items[i].getChecked()) {
         classifiedItems.add(new ClassifiedTableItem(Classifier.classify(items[i], fca.getHierarchy()).getName(), items[i]));
@@ -734,7 +737,7 @@ public class Window {
     filterItems(items);
     
     // Agrupamos los conceptos semanticamente relacionados
-    groupConcepts(items);
+    Map<String, String> groupedConcepts = groupConcepts(items);
     
     // Clear tables
     grouped_concepts.removeAll();
@@ -742,19 +745,14 @@ public class Window {
     groupedAttributesText.setText("");
     
     // Fill results table
-    Set<String> keySet = items.keySet();
+    Set<String> keySet = groupedConcepts.keySet();
     TableItem item = null;
     for (Iterator iterator = keySet.iterator(); iterator.hasNext();) {
       String key = (String) iterator.next();
       item = new TableItem(grouped_concepts, SWT.NONE);
       item.setText(0, key);
-      item.setText(1, items.get(key));
+      item.setText(1, groupedConcepts.get(key));
     }
-    
-    for (Iterator iterator = keySet.iterator(); iterator.hasNext();) {
-      String key = (String) iterator.next();
-    }
-    
     
   }
   
@@ -815,22 +813,50 @@ public class Window {
    * Agrupa conceptos relacionados utilizando WordNet
    * @param items
    */
-  public void groupConcepts(Map<String,String> items) {
+  public Map<String, String> groupConcepts(Map<String, String> items) {
+    Map<String, String> returnMap = new HashMap<String, String>();
     Set<String> attributesSet = items.keySet();
     String[] attributesArray = attributesSet.toArray(new String[0]);
     for (int i = 0; i < attributesArray.length; i++) {
-      String[] attributesA = attributesArray[i].split(", ");
-      for (int j = i + 1; j < attributesArray.length; j++) {
-        String[] attributesB = attributesArray[j].split(", ");
-        // TODO completar metodo
-//        if (isRelated(attributesArray[i], attributesArray[j]))
-//          // crear el concepto nuevo que una los otros, y agregarlo a los items (reemplazando los otros dos) 
+      //si esta en blanco ya fue usado...
+      boolean used = attributesArray[i].equals("");
+      for (int j = i + 1; !used && j < attributesArray.length; j++) {
+        if (isRelated(attributesArray[i], attributesArray[j])){
+          String newKey = attributesArray[i] + ", " + attributesArray[j];
+          String newValue = items.get(attributesArray[i]) + ", " + items.get(attributesArray[j]);
+          returnMap.put(eliminateDuplicates(newKey), newValue);
+          // "sacar" de la lista el concepto que ya agregamos y pasar al siguiente
+          attributesArray[j] = "";
+          used = true;
+        }
       }
+      if (!used) 
+        returnMap.put(attributesArray[i], items.get(attributesArray[i]));
     }
+    return returnMap;
   }
   
   /**
-   * TODO Revisar esto, puede que le falte una vuelta de rosca...
+   * De una lista de atributos (en un string), elimina duplicados
+   * @param attribues
+   * @return
+   */
+  private String eliminateDuplicates(String attributes) {
+    String[] array = attributes.split(", ");
+    //en un set no puede haber duplicados...
+    Set<String> set = new HashSet<String>();
+    for (int i = 0; i < array.length; i++)
+      set.add(array[i]);
+    String ret = "";
+    Iterator iterator = set.iterator();
+    if (iterator.hasNext()) 
+      ret = ret + (String) iterator.next();
+    while (iterator.hasNext())
+      ret = ret + ", " + (String) iterator.next();
+    return ret;
+  }
+  
+  /**
    * Devuelve true si algun atrubuto en A esta relacionado con alguno de B.
    * @param attributesA
    * @param attributesB
@@ -839,11 +865,19 @@ public class Window {
   public boolean isRelated(String attributesA, String attributesB) {
     String[] a = attributesA.split(", ");
     String[] b = attributesB.split(", ");
-    for (int i = 0; i < a.length; i++) {
-      for (int j = 0; j < b.length; j++) {
-        if (WordNetUtils.isRelated(a[i], b[j]))
-          return true;
+    if (a.length == b.length) {
+      int matchCount = 0;
+      for (int i = 0; i < a.length; i++) {
+        boolean matched = false;
+        for (int j = 0; j < b.length && !matched; j++) {
+          if (WordNetUtils.isRelated(a[i], b[j])) {
+            matchCount++;
+            matched = true;
+          }
+        }
       }
+      if (matchCount == a.length) 
+        return true;
     }
     return false;
   }
