@@ -57,7 +57,6 @@ import fca_sample.WordNetUtils;
 
 /**
  * TODO En general:
- * - sacar columna de detalles en las tablas de la izquierda
  * - sacar el confirm de la ultima ventana
  * - implementar resto del algoritmo de agrupar
  * - mantener los check cuando ordena la primer tabla
@@ -264,7 +263,8 @@ public class Window {
               resultsTable.setHeaderVisible(true);
               {
                 TableColumn tblclmnAttributes_1 = new TableColumn(resultsTable, SWT.NONE);
-                tblclmnAttributes_1.setWidth(182);
+                tblclmnAttributes_1.setResizable(false);
+                tblclmnAttributes_1.setWidth(312);
                 tblclmnAttributes_1.setText("Attributes");
                 tblclmnAttributes_1.addListener(SWT.Selection, new Listener() {
                   public void handleEvent(Event e) {
@@ -293,7 +293,7 @@ public class Window {
               }
               {
                 TableColumn tblclmnElements_1 = new TableColumn(resultsTable, SWT.NONE);
-                tblclmnElements_1.setWidth(242);
+                tblclmnElements_1.setResizable(false);
                 tblclmnElements_1.setText("Elements");
               }
               resultsTable.addSelectionListener(new SelectionListener() {
@@ -313,7 +313,7 @@ public class Window {
           }
           {
             Group grpConceptDetails = new Group(composite, SWT.NONE);
-            grpConceptDetails.setText("Concept Details");
+            grpConceptDetails.setText("Concept Details (elements)");
             grpConceptDetails.setBounds(348, 10, 626, 447);
             {
               detailsTable = new Table(grpConceptDetails, SWT.BORDER | SWT.FULL_SELECTION);
@@ -387,7 +387,8 @@ public class Window {
               classifiedConceptsTable.setBounds(10, 21, 316, 389);
               {
                 TableColumn tblclmnAttributes = new TableColumn(classifiedConceptsTable, SWT.NONE);
-                tblclmnAttributes.setWidth(155);
+                tblclmnAttributes.setResizable(false);
+                tblclmnAttributes.setWidth(312);
                 tblclmnAttributes.setText("Attributes");
                 tblclmnAttributes.addListener(SWT.Selection, new Listener() {
                   public void handleEvent(Event e) {
@@ -416,7 +417,7 @@ public class Window {
               }
               {
                 TableColumn tblclmnElements = new TableColumn(classifiedConceptsTable, SWT.NONE);
-                tblclmnElements.setWidth(143);
+                tblclmnElements.setResizable(false);
                 tblclmnElements.setText("Elements");
               }
               classifiedConceptsTable.addSelectionListener(new SelectionListener() {
@@ -435,11 +436,11 @@ public class Window {
             }
           }
           {
-            Group group = new Group(composite, SWT.NONE);
-            group.setBounds(348, 37, 626, 420);
-            group.setText("Concept Details");
+            Group grpConceptDetailselements_1 = new Group(composite, SWT.NONE);
+            grpConceptDetailselements_1.setBounds(348, 37, 626, 420);
+            grpConceptDetailselements_1.setText("Concept Details (elements)");
             {
-              classifiedDetailsTable = new Table(group, SWT.BORDER | SWT.FULL_SELECTION);
+              classifiedDetailsTable = new Table(grpConceptDetailselements_1, SWT.BORDER | SWT.FULL_SELECTION);
               classifiedDetailsTable.setLinesVisible(true);
               classifiedDetailsTable.setHeaderVisible(true);
               classifiedDetailsTable.setBounds(10, 46, 606, 364);
@@ -460,13 +461,13 @@ public class Window {
               }
             }
             {
-              classifiedAttributeText = new Text(group, SWT.BORDER);
+              classifiedAttributeText = new Text(grpConceptDetailselements_1, SWT.BORDER);
               classifiedAttributeText.setEnabled(false);
               classifiedAttributeText.setEditable(false);
               classifiedAttributeText.setBounds(65, 21, 551, 19);
             }
             {
-              Label label = new Label(group, SWT.NONE);
+              Label label = new Label(grpConceptDetailselements_1, SWT.NONE);
               label.setText("Attributes:");
               label.setBounds(10, 27, 49, 13);
             }
@@ -486,11 +487,6 @@ public class Window {
           Composite composite = new Composite(tabFolder, SWT.NONE);
           tbtmQueLePonemo.setControl(composite);
           {
-            Button button = new Button(composite, SWT.NONE);
-            button.setText("Confirm");
-            button.setBounds(653, 463, 68, 23);
-          }
-          {
             Group group = new Group(composite, SWT.NONE);
             group.setText("Lattice Concepts");
             group.setBounds(10, 10, 332, 447);
@@ -501,7 +497,8 @@ public class Window {
               grouped_concepts.setBounds(10, 21, 316, 416);
               {
                 TableColumn tableColumn = new TableColumn(grouped_concepts, SWT.NONE);
-                tableColumn.setWidth(182);
+                tableColumn.setResizable(false);
+                tableColumn.setWidth(312);
                 tableColumn.setText("Attributes");
                 tableColumn.addListener(SWT.Selection, new Listener() {
                   public void handleEvent(Event e) {
@@ -530,7 +527,7 @@ public class Window {
               }
               {
                 TableColumn tableColumn = new TableColumn(grouped_concepts, SWT.NONE);
-                tableColumn.setWidth(242);
+                tableColumn.setResizable(false);
                 tableColumn.setText("Elements");
               }
               grouped_concepts.addSelectionListener(new SelectionListener() {
@@ -549,11 +546,11 @@ public class Window {
             }
           }
           {
-            Group group = new Group(composite, SWT.NONE);
-            group.setText("Concept Details");
-            group.setBounds(348, 10, 626, 447);
+            Group grpConceptDetailselements = new Group(composite, SWT.NONE);
+            grpConceptDetailselements.setText("Concept Details (elements)");
+            grpConceptDetailselements.setBounds(348, 10, 626, 447);
             {
-              groupedDetailsTable = new Table(group, SWT.BORDER | SWT.FULL_SELECTION);
+              groupedDetailsTable = new Table(grpConceptDetailselements, SWT.BORDER | SWT.FULL_SELECTION);
               groupedDetailsTable.setLinesVisible(true);
               groupedDetailsTable.setHeaderVisible(true);
               groupedDetailsTable.setBounds(10, 46, 606, 391);
@@ -574,13 +571,13 @@ public class Window {
               }
             }
             {
-              groupedAttributesText = new Text(group, SWT.BORDER);
+              groupedAttributesText = new Text(grpConceptDetailselements, SWT.BORDER);
               groupedAttributesText.setEnabled(false);
               groupedAttributesText.setEditable(false);
               groupedAttributesText.setBounds(65, 21, 423, 19);
             }
             {
-              Label label = new Label(group, SWT.NONE);
+              Label label = new Label(grpConceptDetailselements, SWT.NONE);
               label.setText("Attributes:");
               label.setBounds(10, 27, 49, 13);
             }
@@ -625,8 +622,6 @@ public class Window {
       item.setText(1, concept.getObjects().toString().replace("[", "").replace("]", ""));
       item.setChecked(true);
     }
-    for (int i = 0; i < resultsTable.getColumnCount(); i++)
-      resultsTable.getColumn(i).pack();
     shlFcaSample.update();
   }
 
@@ -671,8 +666,6 @@ public class Window {
         item.setText(1, (classifiedItem.getItem().getText(1)));
       }
     }
-    for (int i = 0; i < classifiedConceptsTable.getColumnCount(); i++)
-      classifiedConceptsTable.getColumn(i).pack();
     shlFcaSample.update();
   }
   
