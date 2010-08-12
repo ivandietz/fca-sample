@@ -8,7 +8,6 @@ import edu.smu.tspell.wordnet.SynsetType;
 import edu.smu.tspell.wordnet.WordNetDatabase;
 import edu.smu.tspell.wordnet.WordSense;
 
-// TODO Terminar...
 public final class WordNetUtils {
   
   /**
@@ -47,7 +46,14 @@ public final class WordNetUtils {
       return true;
     
     // si a y b son adjetivos
-    // hacer...
+    synonymsA = getAdjectiveSynonyms(a);
+    synonymsB = getAdjectiveSynonyms(b);
+    if (synonymsA.contains(b) || synonymsA.contains(a))
+      return true;
+    antonymsA = getAdjectiveAntonyms(a);
+    antonymsB = getAdjectiveAntonyms(b);
+    if (antonymsA.contains(b) || antonymsB.contains(a))
+      return true;
     
     return false;
   }
@@ -114,6 +120,42 @@ public final class WordNetUtils {
           antonyms.add(wordForm);
       }
     }
+    return antonyms;
+  }
+  
+  public static List<String> getAdjectiveSynonyms(String word) {
+    List<String> synonyms = new ArrayList<String>();
+    WordNetDatabase database = WordNetDatabase.getFileInstance();
+    Synset[] synsets = database.getSynsets(word, SynsetType.ADJECTIVE);
+    for (int i = 0; i < synsets.length; i++) {
+      String wordForms[] = synsets[i].getWordForms();
+      for (int j = 0; j < wordForms.length; j++) {
+        if (!word.equals(wordForms[j]))
+          synonyms.add(wordForms[j]);
+      }
+    }
+    return synonyms;
+  }
+  
+  public static List<String> getAdjectiveAntonyms(String word) {
+    List<String> antonyms = new ArrayList<String>();
+    WordNetDatabase database = WordNetDatabase.getFileInstance();
+    Synset[] synsets = database.getSynsets(word, SynsetType.ADJECTIVE);
+    for (int i = 0; i < synsets.length; i++) {
+      WordSense wordSenses[] = synsets[i].getAntonyms(word);
+      for (int j = 0; j < wordSenses.length; j++) {
+        String wordForm = wordSenses[j].getWordForm();
+        if (!antonyms.contains(wordForm))
+          antonyms.add(wordForm);
+      }
+    }
+    
+    //parches (casos no provistos por wordnet)
+    if (word.equals("usable"))
+      antonyms.add("unusable");
+    if (word.equals("unusable"))
+      antonyms.add("usable");
+    
     return antonyms;
   }
 }
