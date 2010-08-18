@@ -5,5 +5,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="colibri.jar"/>
 	<classpathentry kind="lib" path="jaws-bin.jar"/>
+	<classpathentry kind="lib" path="grappa1_2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
