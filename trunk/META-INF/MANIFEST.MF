@@ -15,4 +15,5 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: colibri.jar,
  jaws-bin.jar,
- .
+ .,
+ grappa1_2.jar
