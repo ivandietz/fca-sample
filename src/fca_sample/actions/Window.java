@@ -52,6 +52,7 @@ import fca_sample.ClassifiedTableItem;
 import fca_sample.Classifier;
 import fca_sample.Criteria;
 import fca_sample.FCAImplementation;
+import fca_sample.StickBuilt;
 import fca_sample.TreeUtils;
 import fca_sample.WordNetUtils;
 
@@ -61,7 +62,7 @@ import fca_sample.WordNetUtils;
  * - implementar resto del algoritmo de agrupar
  * - mantener los check cuando ordena la primer tabla
  * - el agrupamiento mejor hacerlo con un boton en la ultima pestaña, tarda mucho hacerlo en el confirm de la 2da
- * 
+ * - ver si se puede agregar a la base de datos de wordnet nuevas relaciones entre las palabras
  */
 public class Window {
 
@@ -548,12 +549,12 @@ public class Window {
           {
             Group grpConceptDetailselements = new Group(composite, SWT.NONE);
             grpConceptDetailselements.setText("Concept Details (elements)");
-            grpConceptDetailselements.setBounds(348, 10, 626, 447);
+            grpConceptDetailselements.setBounds(348, 10, 626, 416);
             {
               groupedDetailsTable = new Table(grpConceptDetailselements, SWT.BORDER | SWT.FULL_SELECTION);
               groupedDetailsTable.setLinesVisible(true);
               groupedDetailsTable.setHeaderVisible(true);
-              groupedDetailsTable.setBounds(10, 46, 606, 391);
+              groupedDetailsTable.setBounds(10, 46, 606, 360);
               {
                 TableColumn tableColumn = new TableColumn(groupedDetailsTable, SWT.NONE);
                 tableColumn.setWidth(286);
@@ -581,6 +582,26 @@ public class Window {
               label.setText("Attributes:");
               label.setBounds(10, 27, 49, 13);
             }
+          }
+          {
+            Button btnShowGraph = new Button(composite, SWT.NONE);
+            btnShowGraph.addSelectionListener(new SelectionAdapter() {
+              @Override
+              public void widgetSelected(SelectionEvent e) {
+                StickBuilt sb = new StickBuilt();
+                String[] param = new String[6];
+                param[0] = "Nodo 1";
+                param[1] = "Nodo 2";
+                param[2] = "Nodo 3";
+                param[3] = "Nodo 4";
+                param[4] = "Nodo 6";
+                param[5] = "Nodo 5";
+                sb.load(param);
+                sb.display();
+              }
+            });
+            btnShowGraph.setBounds(899, 432, 75, 25);
+            btnShowGraph.setText("Show Graph");
           }
         }
       }
