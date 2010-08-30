@@ -1,5 +1,10 @@
 package fca_sample.actions;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.event.MouseEvent;
+import java.awt.geom.Ellipse2D;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,6 +15,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import javax.swing.JFrame;
+
+import org.apache.commons.collections15.functors.ConstantTransformer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -44,10 +52,21 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
+import Grafo.BasicRendererColor;
+import Grafo.DelegateForestColor;
 import colibri.lib.Concept;
 
 import com.swtdesigner.SWTResourceManager;
 
+import edu.uci.ics.jung.algorithms.layout.Layout;
+import edu.uci.ics.jung.algorithms.layout.TreeLayout;
+import edu.uci.ics.jung.visualization.VisualizationViewer;
+import edu.uci.ics.jung.visualization.control.CrossoverScalingControl;
+import edu.uci.ics.jung.visualization.control.PluggableGraphMouse;
+import edu.uci.ics.jung.visualization.control.ScalingGraphMousePlugin;
+import edu.uci.ics.jung.visualization.control.TranslatingGraphMousePlugin;
+import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
+import edu.uci.ics.jung.visualization.renderers.Renderer;
 import fca_sample.ClassifiedTableItem;
 import fca_sample.Classifier;
 import fca_sample.Criteria;
@@ -588,7 +607,7 @@ public class Window {
             btnShowGraph.addSelectionListener(new SelectionAdapter() {
               @Override
               public void widgetSelected(SelectionEvent e) {
-                StickBuilt sb = new StickBuilt();
+                /*StickBuilt sb = new StickBuilt();
                 String[] param = new String[6];
                 param[0] = "Nodo 1";
                 param[1] = "Nodo 2";
@@ -597,7 +616,10 @@ public class Window {
                 param[4] = "Nodo 6";
                 param[5] = "Nodo 5";
                 sb.load(param);
-                sb.display();
+                sb.display();*/
+                
+                //CODIGO DE GRAFO
+                dibujarGrafo();
               }
             });
             btnShowGraph.setBounds(899, 432, 75, 25);
@@ -894,5 +916,62 @@ public class Window {
         return true;
     }
     return false;
+  }
+  
+  public void dibujarGrafo(){
+   
+    
+   DelegateForestColor<String, String> f = new DelegateForestColor<String, String>();
+    
+    f.addVertex("uno",Color.CYAN);
+    f.addVertex("dos",Color.GRAY);
+    f.addVertex("tres",Color.GREEN);
+    f.addVertex("cuatro",Color.MAGENTA);
+    f.addVertex("cinco");
+    f.addVertex("seis");
+    f.addVertex("siete",Color.YELLOW);
+    f.addVertex("ocho");
+    f.addEdge("Edge-A", "uno", "dos");
+    f.addEdge("Edge-B", "uno", "tres");
+    f.addEdge("Edge-C", "uno", "cuatro");
+    f.addEdge("Edge-D", "uno", "cinco");
+    f.addEdge("Edge-E", "dos", "seis");
+    f.addEdge("Edge-F", "tres", "siete");
+    f.addEdge("Edge-G", "cuatro", "siete");
+    f.addEdge("Edge-H", "cinco", "seis");
+    f.addEdge("Edge-I", "seis", "ocho");
+    f.addEdge("Edge-J", "siete", "ocho");
+    
+    Layout<String, String> layout = new TreeLayout<String,String>(f,100,100);//los ultimos 2 param son las distancias vert y horiz
+   
+    VisualizationViewer<String,String> vv = new VisualizationViewer<String,String>(layout);
+    vv.setPreferredSize(new Dimension(650,650));
+    
+    vv.setRenderer(new BasicRendererColor<String,String>(f.getColoresVertices()));
+    
+    vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<String>());    
+    vv.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
+    
+    //FORMA y TAMAÑO
+    vv.getRenderContext().setVertexShapeTransformer(new ConstantTransformer(new Ellipse2D.Float(-30,-30,40,40)));
+
+    //LETRA
+    vv.getRenderContext().setVertexFontTransformer(new ConstantTransformer(new Font("Helvetica", Font.PLAIN, 14)));       
+  
+    //COLOR
+    BasicRendererColor<String,String> b = (BasicRendererColor) vv.getRenderer();
+    b.setColorVertice("cinco",Color.WHITE);
+        
+    
+    PluggableGraphMouse gm = new PluggableGraphMouse();
+    gm.add(new TranslatingGraphMousePlugin(MouseEvent.BUTTON1_MASK));
+    gm.add(new ScalingGraphMousePlugin(new CrossoverScalingControl(), 0, 1.1f, 0.9f));
+    vv.setGraphMouse(gm);
+    
+    JFrame frame = new JFrame("Simple Graph View");
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.getContentPane().add(vv);
+    frame.pack();
+    frame.setVisible(true);
   }
 }
