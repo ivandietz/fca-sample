@@ -28,7 +28,7 @@ public final class WordNetUtils {
     // Si a y b son sustantivos
     synonymsA = getNounSynonyms(a);
     synonymsB = getNounSynonyms(b);
-    if (synonymsA.contains(b) || synonymsA.contains(a))
+    if (synonymsA.contains(b) || synonymsB.contains(a))
       return true;
     antonymsA = getNounAntonyms(a);
     antonymsB = getNounAntonyms(b);
@@ -38,7 +38,7 @@ public final class WordNetUtils {
     // si a y b son verbos
     synonymsA = getVerbSynonyms(a);
     synonymsB = getVerbSynonyms(b);
-    if (synonymsA.contains(b) || synonymsA.contains(a))
+    if (synonymsA.contains(b) || synonymsB.contains(a))
       return true;
     antonymsA = getVerbAntonyms(a);
     antonymsB = getVerbAntonyms(b);
@@ -48,7 +48,7 @@ public final class WordNetUtils {
     // si a y b son adjetivos
     synonymsA = getAdjectiveSynonyms(a);
     synonymsB = getAdjectiveSynonyms(b);
-    if (synonymsA.contains(b) || synonymsA.contains(a))
+    if (synonymsA.contains(b) || synonymsB.contains(a))
       return true;
     antonymsA = getAdjectiveAntonyms(a);
     antonymsB = getAdjectiveAntonyms(b);

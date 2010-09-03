@@ -21,6 +21,8 @@ import edu.uci.ics.jung.graph.util.TreeUtils;
  * An implementation of <code>Forest<V,E></code> that delegates to a specified <code>DirectedGraph</code>
  * instance.
  * @author Tom Nelson
+ * 
+ * Modified by Ivan & Cristian
  *
  * @param <V> the vertex type
  * @param <E> the edge type
@@ -28,21 +30,21 @@ import edu.uci.ics.jung.graph.util.TreeUtils;
 @SuppressWarnings("serial")
 public class DelegateForestColor<V,E> extends GraphDecorator<V,E> implements Forest<V,E> 
 {
-  private Map<V, Paint> coloresVertices;
+  private Map<V, Paint> vertexColors;
   /**
    * Creates an instance backed by a new {@code DirectedSparseGraph} instance.
    */
   public DelegateForestColor() {
     this(new DirectedSparseGraph<V,E>());
-    coloresVertices = new HashMap<V, Paint>();
+    vertexColors = new HashMap<V, Paint>();
   }
   
-  public Map<V, Paint> getColoresVertices(){
-    return coloresVertices;
+  public Map<V, Paint> getVertexColors(){
+    return vertexColors;
   }
   
-  public void setColoresVertices(Map<V, Paint> colores){
-    coloresVertices = colores;
+  public void setVertexColors(Map<V, Paint> colores){
+    vertexColors = colores;
   }
 
   /**
@@ -92,7 +94,7 @@ public class DelegateForestColor<V,E> extends GraphDecorator<V,E> implements For
   
   public boolean addVertex(V vertex,Paint p) {
     setRoot(vertex);
-    coloresVertices.put(vertex, p);
+    vertexColors.put(vertex, p);
     return true;
   }
 

@@ -55,6 +55,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import Grafo.BasicRendererColor;
 import Grafo.DelegateForestColor;
 import colibri.lib.Concept;
+import colibri.lib.Lattice;
 
 import com.swtdesigner.SWTResourceManager;
 
@@ -71,7 +72,6 @@ import fca_sample.ClassifiedTableItem;
 import fca_sample.Classifier;
 import fca_sample.Criteria;
 import fca_sample.FCAImplementation;
-import fca_sample.StickBuilt;
 import fca_sample.TreeUtils;
 import fca_sample.WordNetUtils;
 
@@ -619,7 +619,7 @@ public class Window {
                 sb.display();*/
                 
                 //CODIGO DE GRAFO
-                dibujarGrafo();
+                drawGraph();
               }
             });
             btnShowGraph.setBounds(899, 432, 75, 25);
@@ -918,49 +918,72 @@ public class Window {
     return false;
   }
   
-  public void dibujarGrafo(){
+  public void drawGraph(){
    
     
    DelegateForestColor<String, String> f = new DelegateForestColor<String, String>();
     
-    f.addVertex("uno",Color.CYAN);
-    f.addVertex("dos",Color.GRAY);
-    f.addVertex("tres",Color.GREEN);
-    f.addVertex("cuatro",Color.MAGENTA);
-    f.addVertex("cinco");
-    f.addVertex("seis");
-    f.addVertex("siete",Color.YELLOW);
-    f.addVertex("ocho");
-    f.addEdge("Edge-A", "uno", "dos");
-    f.addEdge("Edge-B", "uno", "tres");
-    f.addEdge("Edge-C", "uno", "cuatro");
-    f.addEdge("Edge-D", "uno", "cinco");
-    f.addEdge("Edge-E", "dos", "seis");
-    f.addEdge("Edge-F", "tres", "siete");
-    f.addEdge("Edge-G", "cuatro", "siete");
-    f.addEdge("Edge-H", "cinco", "seis");
-    f.addEdge("Edge-I", "seis", "ocho");
-    f.addEdge("Edge-J", "siete", "ocho");
+//    f.addVertex("uno",Color.CYAN);
+//    f.addVertex("dos",Color.GRAY);
+//    f.addVertex("tres",Color.GREEN);
+//    f.addVertex("cuatro",Color.MAGENTA);
+//    f.addVertex("cinco");
+//    f.addVertex("seis");
+//    f.addVertex("siete",Color.YELLOW);
+//    f.addVertex("ocho");
+//    f.addEdge("Edge-A", "uno", "dos");
+//    f.addEdge("Edge-B", "uno", "tres");
+//    f.addEdge("Edge-C", "uno", "cuatro");
+//    f.addEdge("Edge-D", "uno", "cinco");
+//    f.addEdge("Edge-E", "dos", "seis");
+//    f.addEdge("Edge-F", "tres", "siete");
+//    f.addEdge("Edge-G", "cuatro", "siete");
+//    f.addEdge("Edge-H", "cinco", "seis");
+//    f.addEdge("Edge-I", "seis", "ocho");
+//    f.addEdge("Edge-J", "siete", "ocho");
     
-    Layout<String, String> layout = new TreeLayout<String,String>(f,100,100);//los ultimos 2 param son las distancias vert y horiz
+    Lattice lattice = fca.getLattice();
+//    Concept top = lattice.top();
+//    f.addVertex(top.getAttributes().toString());
+    
+    List<Concept> concepts = fca.getConcepts();
+    for (Iterator iterator = concepts.iterator(); iterator.hasNext();) {
+      Concept concept = (Concept) iterator.next();
+//      if (f.containsVertex(concept.getAttributes().toString())) {
+        f.addVertex(concept.getAttributes().toString());
+//      }
+    }
+    
+    int edgeCount = 0;
+    for (Iterator iterator = concepts.iterator(); iterator.hasNext();) {
+      Concept concept = (Concept) iterator.next();
+      Iterator<Concept> childs = lattice.lowerNeighbors(concept);
+      while (childs.hasNext()) {
+        f.addEdge(String.valueOf(edgeCount), concept.getAttributes().toString(), childs.next().getAttributes().toString());
+        edgeCount++;
+      }
+    }
+    
+    
+    Layout<String, String> layout = new TreeLayout<String,String>(f, 80, 80);//los ultimos 2 param son las distancias vert y horiz
    
     VisualizationViewer<String,String> vv = new VisualizationViewer<String,String>(layout);
-    vv.setPreferredSize(new Dimension(650,650));
+    vv.setPreferredSize(new Dimension(850, 850));
     
-    vv.setRenderer(new BasicRendererColor<String,String>(f.getColoresVertices()));
+    vv.setRenderer(new BasicRendererColor<String,String>(f.getVertexColors()));
     
     vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<String>());    
     vv.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
     
     //FORMA y TAMAÑO
-    vv.getRenderContext().setVertexShapeTransformer(new ConstantTransformer(new Ellipse2D.Float(-30,-30,40,40)));
+    vv.getRenderContext().setVertexShapeTransformer(new ConstantTransformer(new Ellipse2D.Float(-30 ,-30, 40, 40)));
 
     //LETRA
     vv.getRenderContext().setVertexFontTransformer(new ConstantTransformer(new Font("Helvetica", Font.PLAIN, 14)));       
   
     //COLOR
     BasicRendererColor<String,String> b = (BasicRendererColor) vv.getRenderer();
-    b.setColorVertice("cinco",Color.WHITE);
+    b.setVertexColor("cinco", Color.WHITE);
         
     
     PluggableGraphMouse gm = new PluggableGraphMouse();
@@ -969,7 +992,7 @@ public class Window {
     vv.setGraphMouse(gm);
     
     JFrame frame = new JFrame("Simple Graph View");
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.getContentPane().add(vv);
     frame.pack();
     frame.setVisible(true);

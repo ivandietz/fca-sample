@@ -37,15 +37,15 @@ public class BasicRendererColor<V,E> implements Renderer<V, E> {
     Renderer.EdgeLabel<V,E> edgeLabelRenderer = new BasicEdgeLabelRenderer<V,E>();
     
     public BasicRendererColor(Map<V, Paint> colores){
-        vertexRenderer.setColoresVertices(colores);      
+        vertexRenderer.setVertexColors(colores);      
     }
     
-    public void setColorVertice(V v,Paint p){
-       if (vertexRenderer.getColoresVertices().containsKey(v)){
-         vertexRenderer.getColoresVertices().remove(v);
-         vertexRenderer.getColoresVertices().put(v, p);
+    public void setVertexColor(V v,Paint p){
+       if (vertexRenderer.getVertexColors().containsKey(v)){
+         vertexRenderer.getVertexColors().remove(v);
+         vertexRenderer.getVertexColors().put(v, p);
        }
-       else vertexRenderer.getColoresVertices().put(v, p);            
+       else vertexRenderer.getVertexColors().put(v, p);            
     }
     
   public void render(RenderContext<V, E> renderContext, Layout<V, E> layout) {
