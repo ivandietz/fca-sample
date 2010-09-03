@@ -26,14 +26,14 @@ import edu.uci.ics.jung.visualization.transform.shape.GraphicsDecorator;
 
 public class BasicVertexRendererColor<V,E> implements Renderer.Vertex<V,E> {
   
-  protected Map<V, Paint> coloresVertices;
+  protected Map<V, Paint> vertexColors;
   
-  public Map<V, Paint> getColoresVertices() {
-    return coloresVertices;
+  public Map<V, Paint> getVertexColors() {
+    return vertexColors;
   }
 
-  public void setColoresVertices(Map<V, Paint> coloresVertices) {
-    this.coloresVertices = coloresVertices;
+  public void setVertexColors(Map<V, Paint> vertexColors) {
+    this.vertexColors = vertexColors;
   }
 
     public void paintVertex(RenderContext<V,E> rc, Layout<V,E> layout, V v) {
@@ -102,8 +102,8 @@ public class BasicVertexRendererColor<V,E> implements Renderer.Vertex<V,E> {
       Paint oldPaint = g.getPaint();
       Paint fillPaint = rc.getVertexFillPaintTransformer().transform(v);
       
-      if(coloresVertices.containsKey(v)){
-        g.setPaint(coloresVertices.get(v));
+      if(vertexColors.containsKey(v)){
+        g.setPaint(vertexColors.get(v));
         g.fill(shape);
         g.setPaint(oldPaint);
       }      

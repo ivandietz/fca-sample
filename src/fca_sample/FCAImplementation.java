@@ -96,15 +96,19 @@ public class FCAImplementation {
       while (it.hasNext()) {
         Concept c = it.next();
         // filter by size
-        if (c.getAttributes().size() > 0 && c.getObjects().size() > 1)
+//        if (c.getAttributes().size() > 0 && c.getObjects().size() > 1)
           concepts.add(c);
       }
     }
     return concepts;
   }
 
-  public HashMap getHierarchy() {
+  public HashMap<String, String> getHierarchy() {
     return hierarchy;
+  }
+  
+  public Lattice getLattice() {
+    return lattice;
   }
 
 }
