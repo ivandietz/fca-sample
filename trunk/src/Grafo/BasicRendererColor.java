@@ -89,21 +89,8 @@ public class BasicRendererColor<V,E> implements Renderer<V, E> {
         try {
           for(V v : layout.getGraph().getVertices()) {
 
-          if (v.equals(bottomVertex) && counter == 0){          
-            counter++;
-            Point2D p = layout.transform(topVertex);
-            p = renderContext.getMultiLayerTransformer().transform(Layer.LAYOUT, p);
-            float topX = (float)p.getX();
-//            float topY = (float)p.getY();
-            
-            Point2D p2 = layout.transform(bottomVertex);
-            p2 = renderContext.getMultiLayerTransformer().transform(Layer.LAYOUT, p2);
-//            float bottomX = (float)p.getX();
-            float bottomY = (float)p2.getY();
-  
-            Point2D pos = new Point2D.Float (topX,bottomY + 200);
-            layout.setLocation(bottomVertex, pos);                        
-          }
+          if (v.equals(bottomVertex) && counter == 0)          
+            locateBottomVertex(renderContext,layout);
           
           renderVertex(
                     renderContext,
@@ -191,6 +178,20 @@ public class BasicRendererColor<V,E> implements Renderer<V, E> {
     // TODO Auto-generated method stub
     
   }
+  
+  public void locateBottomVertex(RenderContext<V, E> renderContext, Layout<V, E> layout){
+    counter++;
+    Point2D p = layout.transform(topVertex);
+    p = renderContext.getMultiLayerTransformer().transform(Layer.LAYOUT, p);
+    float topX = (float)p.getX();
+//    float topY = (float)p.getY();
+    
+    Point2D p2 = layout.transform(bottomVertex);
+    p2 = renderContext.getMultiLayerTransformer().transform(Layer.LAYOUT, p2);
+//    float bottomX = (float)p.getX();
+    float bottomY = (float)p2.getY();
 
-
+    Point2D pos = new Point2D.Float (topX,bottomY + 200);
+    layout.setLocation(bottomVertex, pos);    
+  }
 }
