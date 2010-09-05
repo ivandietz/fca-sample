@@ -1,17 +1,15 @@
 package Grafo;
-/*
- * Copyright (c) 2003, the JUNG Project and the Regents of the University of
- * California All rights reserved.
- * 
- * This software is open-source under the BSD license; see either "license.txt"
- * or http://jung.sourceforge.net/license.txt for a description.
- */
+
 
 import java.awt.Paint;
+import java.awt.Shape;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.util.ConcurrentModificationException;
 import java.util.Map;
 
 import edu.uci.ics.jung.algorithms.layout.Layout;
+import edu.uci.ics.jung.visualization.Layer;
 import edu.uci.ics.jung.visualization.RenderContext;
 import edu.uci.ics.jung.visualization.renderers.BasicEdgeLabelRenderer;
 import edu.uci.ics.jung.visualization.renderers.BasicEdgeRenderer;
@@ -35,9 +33,29 @@ public class BasicRendererColor<V,E> implements Renderer<V, E> {
     Renderer.VertexLabel<V,E> vertexLabelRenderer = new BasicVertexLabelRenderer<V,E>();
     Renderer.Edge<V,E> edgeRenderer = new BasicEdgeRenderer<V,E>();
     Renderer.EdgeLabel<V,E> edgeLabelRenderer = new BasicEdgeLabelRenderer<V,E>();
+    private V topVertex;
+    private V bottomVertex;
+    int counter;
+    
+    public V getBottomVertex() {
+      return bottomVertex;
+    }
+
+    public void setBottomVertex(V bottomVertex) {
+      this.bottomVertex = bottomVertex;
+    }
+
+    public V getTopVertex() {
+      return topVertex;
+    }
+
+    public void setTopVertex(V topVertex) {
+      this.topVertex = topVertex;
+    }            
     
     public BasicRendererColor(Map<V, Paint> colores){
         vertexRenderer.setVertexColors(colores);      
+        counter = 0;
     }
     
     public void setVertexColor(V v,Paint p){
@@ -71,6 +89,22 @@ public class BasicRendererColor<V,E> implements Renderer<V, E> {
         try {
           for(V v : layout.getGraph().getVertices()) {
 
+          if (v.equals(bottomVertex) && counter == 0){          
+            counter++;
+            Point2D p = layout.transform(topVertex);
+            p = renderContext.getMultiLayerTransformer().transform(Layer.LAYOUT, p);
+            float topX = (float)p.getX();
+//            float topY = (float)p.getY();
+            
+            Point2D p2 = layout.transform(bottomVertex);
+            p2 = renderContext.getMultiLayerTransformer().transform(Layer.LAYOUT, p2);
+//            float bottomX = (float)p.getX();
+            float bottomY = (float)p2.getY();
+  
+            Point2D pos = new Point2D.Float (topX,bottomY + 200);
+            layout.setLocation(bottomVertex, pos);                        
+          }
+          
           renderVertex(
                     renderContext,
                         layout,
@@ -78,7 +112,7 @@ public class BasicRendererColor<V,E> implements Renderer<V, E> {
           renderVertexLabel(
                     renderContext,
                         layout,
-                    v);
+                    v);                    
           }
         } catch(ConcurrentModificationException cme) {
             renderContext.getScreenDevice().repaint();

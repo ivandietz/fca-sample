@@ -3,7 +3,6 @@ package fca_sample.actions;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.text.Collator;
 import java.util.ArrayList;
@@ -63,9 +62,9 @@ import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.algorithms.layout.TreeLayout;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.CrossoverScalingControl;
-import edu.uci.ics.jung.visualization.control.PluggableGraphMouse;
+import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
+import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ScalingGraphMousePlugin;
-import edu.uci.ics.jung.visualization.control.TranslatingGraphMousePlugin;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 import edu.uci.ics.jung.visualization.renderers.Renderer;
 import fca_sample.ClassifiedTableItem;
@@ -104,7 +103,7 @@ public class Window {
   private Text classifiedAttributeText;
   private Combo criteriaCombo;
   private List<ClassifiedTableItem> classifiedItems = new ArrayList<ClassifiedTableItem>();
-  FCAImplementation fca;
+  private FCAImplementation fca;
   private Table grouped_concepts;
   boolean groupedConceptsOrderAscendant = true;
   private Table groupedDetailsTable;
@@ -981,15 +980,21 @@ public class Window {
     //LETRA
     vv.getRenderContext().setVertexFontTransformer(new ConstantTransformer(new Font("Helvetica", Font.PLAIN, 14)));       
   
-    //COLOR
-    BasicRendererColor<String,String> b = (BasicRendererColor) vv.getRenderer();
-    b.setVertexColor("cinco", Color.WHITE);
-        
+//    //COLOR
+//    BasicRendererColor<String,String> b = (BasicRendererColor) vv.getRenderer();
+//    b.setVertexColor("cinco", Color.WHITE);
     
-    PluggableGraphMouse gm = new PluggableGraphMouse();
-    gm.add(new TranslatingGraphMousePlugin(MouseEvent.BUTTON1_MASK));
-    gm.add(new ScalingGraphMousePlugin(new CrossoverScalingControl(), 0, 1.1f, 0.9f));
+    BasicRendererColor<String,String> b = (BasicRendererColor) vv.getRenderer();
+    b.setTopVertex(lattice.top().getAttributes().toString());
+    b.setBottomVertex(lattice.bottom().getAttributes().toString());        
+     
+    DefaultModalGraphMouse gm = new DefaultModalGraphMouse();
+    gm.setMode(ModalGraphMouse.Mode.TRANSFORMING);
+    gm.add(new ScalingGraphMousePlugin(new CrossoverScalingControl(), 2, 1.1f, 0.9f));
     vv.setGraphMouse(gm);
+    
+    vv.addKeyListener(gm.getModeKeyListener());
+    
     
     JFrame frame = new JFrame("Simple Graph View");
 //    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
