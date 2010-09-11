@@ -76,15 +76,17 @@ import fca_sample.WordNetUtils;
 
 /**
  * TODO En general:
- * - sacar el confirm de la ultima ventana
  * - implementar resto del algoritmo de agrupar
  * - mantener los check cuando ordena la primer tabla
- * - el agrupamiento mejor hacerlo con un boton en la ultima pestaña, tarda mucho hacerlo en el confirm de la 2da
- * - ver si se puede agregar a la base de datos de wordnet nuevas relaciones entre las palabras
+ * - el agrupamiento mejor hacerlo con un boton en la anteultima pestaña, tarda mucho hacerlo en el confirm de la 2da
+ * - agregar archivos de wordnet al proyecto
+ * - truncar los nombres q se muestran en el grafo
+ * - mejorar grafo (colores, scroll, textos, tooltips, detalle del concepto, vista general, etc)
  */
 public class Window {
 
   protected Shell shlFcaSample;
+  private TabFolder tabFolder;
   private Combo projectsCombo;
   private Tree tree;
   private HashMap<String, TreeItem> packagesMap;
@@ -150,7 +152,7 @@ public class Window {
     shlFcaSample.setSize(1000, 580);
     shlFcaSample.setText("FCA Sample");
     {
-      TabFolder tabFolder = new TabFolder(shlFcaSample, SWT.NONE);
+      tabFolder = new TabFolder(shlFcaSample, SWT.NONE);
       tabFolder.setBounds(0, 10, 992, 522);
       {
         TabItem tbtmSelectProjects = new TabItem(tabFolder, SWT.NONE);
@@ -189,6 +191,7 @@ public class Window {
                     fca = new FCAImplementation(projectsMap.get(projectsCombo.getText()), btnClasses.getSelection(), btnMethods.getSelection(), btnParameters.getSelection(), packagesMap);
                     showResults(fca.getConcepts());
                     lblRunning.setText("");
+                    tabFolder.setSelection(1);
                   } catch (CoreException e1) {
                     e1.printStackTrace();
                   }
@@ -223,7 +226,7 @@ public class Window {
           }
           {
             Label lblSelectProject = new Label(composite, SWT.NONE);
-            lblSelectProject.setBounds(10, 23, 66, 13);
+            lblSelectProject.setBounds(10, 23, 78, 13);
             lblSelectProject.setText("Select Project");
           }
           {
@@ -266,9 +269,10 @@ public class Window {
                 classifiedDetailsTable.removeAll();
                 classifiedAttributeText.setText("");
                 criteriaCombo.clearSelection();
+                tabFolder.setSelection(2);
               }
             });
-            btnConfirm.setBounds(653, 463, 68, 23);
+            btnConfirm.setBounds(20, 461, 68, 25);
             btnConfirm.setText("Confirm");
           }
           {
@@ -359,13 +363,24 @@ public class Window {
               attributesText = new Text(grpConceptDetails, SWT.BORDER);
               attributesText.setEditable(false);
               attributesText.setEnabled(false);
-              attributesText.setBounds(65, 21, 423, 19);
+              attributesText.setBounds(74, 21, 542, 19);
             }
             {
               Label lblAttributes = new Label(grpConceptDetails, SWT.NONE);
-              lblAttributes.setBounds(10, 27, 49, 13);
+              lblAttributes.setBounds(10, 27, 59, 13);
               lblAttributes.setText("Attributes:");
             }
+          }
+          {
+            Button button = new Button(composite, SWT.NONE);
+            button.addSelectionListener(new SelectionAdapter() {
+              @Override
+              public void widgetSelected(SelectionEvent e) {
+                drawGraph();
+              }
+            });
+            button.setBounds(94, 461, 75, 25);
+            button.setText("Show Graph");
           }
         }
       }
@@ -456,13 +471,13 @@ public class Window {
           }
           {
             Group grpConceptDetailselements_1 = new Group(composite, SWT.NONE);
-            grpConceptDetailselements_1.setBounds(348, 37, 626, 420);
+            grpConceptDetailselements_1.setBounds(348, 10, 626, 447);
             grpConceptDetailselements_1.setText("Concept Details (elements)");
             {
               classifiedDetailsTable = new Table(grpConceptDetailselements_1, SWT.BORDER | SWT.FULL_SELECTION);
               classifiedDetailsTable.setLinesVisible(true);
               classifiedDetailsTable.setHeaderVisible(true);
-              classifiedDetailsTable.setBounds(10, 46, 606, 364);
+              classifiedDetailsTable.setBounds(10, 46, 606, 391);
               {
                 TableColumn tableColumn = new TableColumn(classifiedDetailsTable, SWT.NONE);
                 tableColumn.setWidth(286);
@@ -483,12 +498,12 @@ public class Window {
               classifiedAttributeText = new Text(grpConceptDetailselements_1, SWT.BORDER);
               classifiedAttributeText.setEnabled(false);
               classifiedAttributeText.setEditable(false);
-              classifiedAttributeText.setBounds(65, 21, 551, 19);
+              classifiedAttributeText.setBounds(74, 21, 542, 19);
             }
             {
               Label label = new Label(grpConceptDetailselements_1, SWT.NONE);
               label.setText("Attributes:");
-              label.setBounds(10, 27, 49, 13);
+              label.setBounds(10, 27, 58, 13);
             }
           }
           {
@@ -496,15 +511,25 @@ public class Window {
             lblCriteria.setBounds(10, 13, 49, 13);
             lblCriteria.setText("Criteria");
           }
+          {
+            Button button = new Button(composite, SWT.NONE);
+            button.addSelectionListener(new SelectionAdapter() {
+              @Override
+              public void widgetSelected(SelectionEvent e) {
+              }
+            });
+            button.setBounds(20, 459, 75, 25);
+            button.setText("Show Graph");
+          }
 
         }
       }
       {
-        TabItem tbtmQueLePonemo = new TabItem(tabFolder, SWT.NONE);
-        tbtmQueLePonemo.setText("Grouped Crosscuttings");
+        TabItem tbtmGroupCrosscutings = new TabItem(tabFolder, SWT.NONE);
+        tbtmGroupCrosscutings.setText("Grouped Crosscuttings");
         {
           Composite composite = new Composite(tabFolder, SWT.NONE);
-          tbtmQueLePonemo.setControl(composite);
+          tbtmGroupCrosscutings.setControl(composite);
           {
             Group group = new Group(composite, SWT.NONE);
             group.setText("Lattice Concepts");
@@ -567,12 +592,12 @@ public class Window {
           {
             Group grpConceptDetailselements = new Group(composite, SWT.NONE);
             grpConceptDetailselements.setText("Concept Details (elements)");
-            grpConceptDetailselements.setBounds(348, 10, 626, 416);
+            grpConceptDetailselements.setBounds(348, 10, 626, 447);
             {
               groupedDetailsTable = new Table(grpConceptDetailselements, SWT.BORDER | SWT.FULL_SELECTION);
               groupedDetailsTable.setLinesVisible(true);
               groupedDetailsTable.setHeaderVisible(true);
-              groupedDetailsTable.setBounds(10, 46, 606, 360);
+              groupedDetailsTable.setBounds(10, 46, 606, 391);
               {
                 TableColumn tableColumn = new TableColumn(groupedDetailsTable, SWT.NONE);
                 tableColumn.setWidth(286);
@@ -593,41 +618,22 @@ public class Window {
               groupedAttributesText = new Text(grpConceptDetailselements, SWT.BORDER);
               groupedAttributesText.setEnabled(false);
               groupedAttributesText.setEditable(false);
-              groupedAttributesText.setBounds(65, 21, 423, 19);
+              groupedAttributesText.setBounds(74, 21, 542, 19);
             }
             {
               Label label = new Label(grpConceptDetailselements, SWT.NONE);
               label.setText("Attributes:");
-              label.setBounds(10, 27, 49, 13);
+              label.setBounds(10, 27, 542, 13);
             }
           }
           {
             Button btnShowGraph = new Button(composite, SWT.NONE);
-            btnShowGraph.addSelectionListener(new SelectionAdapter() {
-              @Override
-              public void widgetSelected(SelectionEvent e) {
-                /*StickBuilt sb = new StickBuilt();
-                String[] param = new String[6];
-                param[0] = "Nodo 1";
-                param[1] = "Nodo 2";
-                param[2] = "Nodo 3";
-                param[3] = "Nodo 4";
-                param[4] = "Nodo 6";
-                param[5] = "Nodo 5";
-                sb.load(param);
-                sb.display();*/
-                
-                //CODIGO DE GRAFO
-                drawGraph();
-              }
-            });
-            btnShowGraph.setBounds(899, 432, 75, 25);
+            btnShowGraph.setBounds(20, 459, 75, 25);
             btnShowGraph.setText("Show Graph");
           }
         }
       }
     }
-
   }
 
   private void fillProjectsMap() {
@@ -659,10 +665,12 @@ public class Window {
     TableItem item = null;
     for (Iterator iterator = concepts.iterator(); iterator.hasNext();) {
       Concept concept = (Concept) iterator.next();
-      item = new TableItem(resultsTable, SWT.NONE);
-      item.setText(0, concept.getAttributes().toString().replace("[", "").replace("]", ""));
-      item.setText(1, concept.getObjects().toString().replace("[", "").replace("]", ""));
-      item.setChecked(true);
+      if (concept.getAttributes().size() > 0 && concept.getObjects().size() > 0) {
+        item = new TableItem(resultsTable, SWT.NONE);
+        item.setText(0, concept.getAttributes().toString().replace("[", "").replace("]", ""));
+        item.setText(1, concept.getObjects().toString().replace("[", "").replace("]", ""));
+        item.setChecked(true);
+      }
     }
     shlFcaSample.update();
   }
@@ -918,41 +926,17 @@ public class Window {
   }
   
   public void drawGraph(){
-   
-    
-   DelegateForestColor<String, String> f = new DelegateForestColor<String, String>();
-    
-//    f.addVertex("uno",Color.CYAN);
-//    f.addVertex("dos",Color.GRAY);
-//    f.addVertex("tres",Color.GREEN);
-//    f.addVertex("cuatro",Color.MAGENTA);
-//    f.addVertex("cinco");
-//    f.addVertex("seis");
-//    f.addVertex("siete",Color.YELLOW);
-//    f.addVertex("ocho");
-//    f.addEdge("Edge-A", "uno", "dos");
-//    f.addEdge("Edge-B", "uno", "tres");
-//    f.addEdge("Edge-C", "uno", "cuatro");
-//    f.addEdge("Edge-D", "uno", "cinco");
-//    f.addEdge("Edge-E", "dos", "seis");
-//    f.addEdge("Edge-F", "tres", "siete");
-//    f.addEdge("Edge-G", "cuatro", "siete");
-//    f.addEdge("Edge-H", "cinco", "seis");
-//    f.addEdge("Edge-I", "seis", "ocho");
-//    f.addEdge("Edge-J", "siete", "ocho");
-    
+    DelegateForestColor<String, String> f = new DelegateForestColor<String, String>();
     Lattice lattice = fca.getLattice();
-//    Concept top = lattice.top();
-//    f.addVertex(top.getAttributes().toString());
     
+    // add vertex
     List<Concept> concepts = fca.getConcepts();
     for (Iterator iterator = concepts.iterator(); iterator.hasNext();) {
       Concept concept = (Concept) iterator.next();
-//      if (f.containsVertex(concept.getAttributes().toString())) {
         f.addVertex(concept.getAttributes().toString());
-//      }
     }
     
+    //add edges
     int edgeCount = 0;
     for (Iterator iterator = concepts.iterator(); iterator.hasNext();) {
       Concept concept = (Concept) iterator.next();
@@ -963,14 +947,11 @@ public class Window {
       }
     }
     
-    
-    Layout<String, String> layout = new TreeLayout<String,String>(f, 80, 80);//los ultimos 2 param son las distancias vert y horiz
+    Layout<String, String> layout = new TreeLayout<String,String>(f, 80, 80);
    
     VisualizationViewer<String,String> vv = new VisualizationViewer<String,String>(layout);
-    vv.setPreferredSize(new Dimension(850, 850));
-    
+    vv.setPreferredSize(new Dimension(1200, 600));
     vv.setRenderer(new BasicRendererColor<String,String>(f.getVertexColors()));
-    
     vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<String>());    
     vv.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
     
@@ -979,10 +960,7 @@ public class Window {
 
     //LETRA
     vv.getRenderContext().setVertexFontTransformer(new ConstantTransformer(new Font("Helvetica", Font.PLAIN, 14)));       
-  
-//    //COLOR
-//    BasicRendererColor<String,String> b = (BasicRendererColor) vv.getRenderer();
-//    b.setVertexColor("cinco", Color.WHITE);
+
     
     BasicRendererColor<String,String> b = (BasicRendererColor) vv.getRenderer();
     b.setTopVertex(lattice.top().getAttributes().toString());
@@ -993,11 +971,10 @@ public class Window {
     gm.add(new ScalingGraphMousePlugin(new CrossoverScalingControl(), 2, 1.1f, 0.9f));
     vv.setGraphMouse(gm);
     
-    vv.addKeyListener(gm.getModeKeyListener());
-    
+    vv.addKeyListener(gm.getModeKeyListener());    
     
     JFrame frame = new JFrame("Simple Graph View");
-//    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.setSize(800, 600);
     frame.getContentPane().add(vv);
     frame.pack();
     frame.setVisible(true);

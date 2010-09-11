@@ -175,7 +175,6 @@ public class BasicRendererColor<V,E> implements Renderer<V, E> {
 
   @Override
   public void setVertexRenderer(edu.uci.ics.jung.visualization.renderers.Renderer.Vertex<V, E> r) {
-    // TODO Auto-generated method stub
     
   }
   
@@ -191,7 +190,7 @@ public class BasicRendererColor<V,E> implements Renderer<V, E> {
 //    float bottomX = (float)p.getX();
     float bottomY = (float)p2.getY();
 
-    Point2D pos = new Point2D.Float (topX,bottomY + 200);
+    Point2D pos = new Point2D.Float (topX,bottomY + 150);
     layout.setLocation(bottomVertex, pos);    
   }
 }
