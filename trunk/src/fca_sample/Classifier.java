@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.eclipse.swt.widgets.TableItem;
 
+//TODO Revisar!!! Algunos no estan andando bien...
 public class Classifier {
 
   public static Criteria classify(TableItem item, HashMap classHierarchy) {
@@ -33,7 +34,7 @@ public class Classifier {
       if (components.length <= 2) {
         if (components.length == 2) {
           hasMethod = true;
-          if (!components[1].contains(components[0]))
+          if (!components[1].toLowerCase().contains(components[0].toLowerCase()))
             return false;
         }
       } else
@@ -50,7 +51,7 @@ public class Classifier {
       if (components.length == 1 || components.length == 3) {
         if (components.length == 3) {
           hasParameter = true;
-          if (!components[2].contains(components[0]))
+          if (!components[2].toLowerCase().contains(components[0].toLowerCase()))
             return false;
         }
       } else

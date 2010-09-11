@@ -30,6 +30,7 @@ import colibri.lib.TreeRelation;
 public class FCAImplementation {
 
   private Lattice lattice = null;
+  List<Concept> concepts = null;
   private HashMap<String, String> hierarchy = null;  
 
   public FCAImplementation(IProject project, boolean useClasses,
@@ -84,25 +85,26 @@ public class FCAImplementation {
         }
       }
     }
+    
+    //generate lattice
     lattice = new HybridLattice(rel);
-  }
-
-  public List<Concept> getConcepts() {
-    List<Concept> concepts = new ArrayList<Concept>();
+    
+    //store concepts in the lists
+    concepts = new ArrayList<Concept>();
     if (lattice != null) {
-      // get the iterator
       Iterator<Concept> it = lattice.conceptIterator(Traversal.TOP_OBJSIZE);
 
       while (it.hasNext()) {
         Concept c = it.next();
-        // filter by size
-//        if (c.getAttributes().size() > 0 && c.getObjects().size() > 1)
-          concepts.add(c);
+        concepts.add(c);
       }
     }
-    return concepts;
   }
 
+  public List<Concept> getConcepts() {
+    return concepts;
+  }
+  
   public HashMap<String, String> getHierarchy() {
     return hierarchy;
   }
