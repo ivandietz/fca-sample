@@ -43,8 +43,8 @@ public class DelegateForestColor<V,E> extends GraphDecorator<V,E> implements For
     return vertexColors;
   }
   
-  public void setVertexColors(Map<V, Paint> colores){
-    vertexColors = colores;
+  public void setVertexColors(Map<V, Paint> colors){
+    vertexColors = colors;
   }
 
   /**

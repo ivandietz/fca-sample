@@ -99,6 +99,7 @@ public class Window {
   boolean resultsTableOrderAscendant = true;
   private Table detailsTable;
   private Text attributesText;
+  private Label conceptsNumber;
   private Table classifiedConceptsTable;
   boolean classifiedConceptsTableOrderAscendant = true;
   private Table classifiedDetailsTable;
@@ -192,6 +193,7 @@ public class Window {
                     showResults(fca.getConcepts());
                     lblRunning.setText("");
                     tabFolder.setSelection(1);
+                    conceptsNumber.setText("Total concepts: " + String.valueOf(fca.getConcepts().size()));
                   } catch (CoreException e1) {
                     e1.printStackTrace();
                   }
@@ -382,6 +384,11 @@ public class Window {
             button.setBounds(94, 461, 75, 25);
             button.setText("Show Graph");
           }
+          {
+            conceptsNumber = new Label(composite, SWT.NONE);
+            conceptsNumber.setText("Total concepts: ");
+            conceptsNumber.setBounds(175, 466, 167, 15);
+          }
         }
       }
       {
@@ -531,11 +538,11 @@ public class Window {
           Composite composite = new Composite(tabFolder, SWT.NONE);
           tbtmGroupCrosscutings.setControl(composite);
           {
-            Group group = new Group(composite, SWT.NONE);
-            group.setText("Lattice Concepts");
-            group.setBounds(10, 10, 332, 447);
+            Group grpConcepts_1 = new Group(composite, SWT.NONE);
+            grpConcepts_1.setText("Concepts");
+            grpConcepts_1.setBounds(10, 10, 332, 447);
             {
-              grouped_concepts = new Table(group, SWT.BORDER | SWT.FULL_SELECTION);
+              grouped_concepts = new Table(grpConcepts_1, SWT.BORDER | SWT.FULL_SELECTION);
               grouped_concepts.setLinesVisible(true);
               grouped_concepts.setHeaderVisible(true);
               grouped_concepts.setBounds(10, 21, 316, 416);
@@ -947,7 +954,7 @@ public class Window {
       }
     }
     
-    Layout<String, String> layout = new TreeLayout<String,String>(f, 80, 80);
+    Layout<String, String> layout = new TreeLayout<String,String>(f, 100, 100);
    
     VisualizationViewer<String,String> vv = new VisualizationViewer<String,String>(layout);
     vv.setPreferredSize(new Dimension(1200, 600));
@@ -956,10 +963,10 @@ public class Window {
     vv.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
     
     //FORMA y TAMAÑO
-    vv.getRenderContext().setVertexShapeTransformer(new ConstantTransformer(new Ellipse2D.Float(-30 ,-30, 40, 40)));
+    vv.getRenderContext().setVertexShapeTransformer(new ConstantTransformer(new Ellipse2D.Float(-30 ,-30, 80, 80)));
 
     //LETRA
-    vv.getRenderContext().setVertexFontTransformer(new ConstantTransformer(new Font("Helvetica", Font.PLAIN, 14)));       
+    vv.getRenderContext().setVertexFontTransformer(new ConstantTransformer(new Font("Arial", Font.PLAIN, 12)));       
 
     
     BasicRendererColor<String,String> b = (BasicRendererColor) vv.getRenderer();
