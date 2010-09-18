@@ -1,5 +1,6 @@
 package fca_sample.actions;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.geom.Ellipse2D;
@@ -374,7 +375,7 @@ public class Window {
             button.addSelectionListener(new SelectionAdapter() {
               @Override
               public void widgetSelected(SelectionEvent e) {
-                drawGraph();
+                drawGraph(false);
               }
             });
             button.setBounds(94, 461, 75, 25);
@@ -519,6 +520,7 @@ public class Window {
             button.addSelectionListener(new SelectionAdapter() {
               @Override
               public void widgetSelected(SelectionEvent e) {
+                drawGraph(true);
               }
             });
             button.setBounds(20, 459, 75, 25);
@@ -943,7 +945,7 @@ public class Window {
     return false;
   }
   
-  public void drawGraph(){
+  public void drawGraph(boolean paintClassification){
     DelegateForestColor<String, String> f = new DelegateForestColor<String, String>();
     Lattice lattice = fca.getLattice();
     
@@ -991,10 +993,17 @@ public class Window {
     
     vv.addKeyListener(gm.getModeKeyListener());    
     
+    if (paintClassification){
+      TableItem[] items = classifiedConceptsTable.getItems();
+      for (TableItem tableItem : items) {
+        b.setVertexColor("[" + tableItem.getText(0) + "]", Color.GREEN);      
+      }
+    }
+    
     JFrame frame = new JFrame("Simple Graph View");
     frame.setSize(800, 600);
     frame.getContentPane().add(vv);
     frame.pack();
-    frame.setVisible(true);
+    frame.setVisible(true);    
   }
 }
