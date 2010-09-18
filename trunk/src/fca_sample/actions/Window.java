@@ -1,6 +1,5 @@
 package fca_sample.actions;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.geom.Ellipse2D;
@@ -36,6 +35,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
@@ -96,19 +96,19 @@ public class Window {
   private Label lblRunning;
   private Map<String, IProject> projectsMap;
   private Table resultsTable;
-  boolean resultsTableOrderAscendant = true;
+  private boolean resultsTableOrderAscendant = true;
   private Table detailsTable;
   private Text attributesText;
   private Label conceptsNumber;
   private Table classifiedConceptsTable;
-  boolean classifiedConceptsTableOrderAscendant = true;
+  private boolean classifiedConceptsTableOrderAscendant = true;
   private Table classifiedDetailsTable;
   private Text classifiedAttributeText;
   private Combo criteriaCombo;
   private List<ClassifiedTableItem> classifiedItems = new ArrayList<ClassifiedTableItem>();
   private FCAImplementation fca;
   private Table grouped_concepts;
-  boolean groupedConceptsOrderAscendant = true;
+  private boolean groupedConceptsOrderAscendant = true;
   private Table groupedDetailsTable;
   private Text groupedAttributesText;
 
@@ -120,9 +120,6 @@ public class Window {
    */
   public static void main() {
     try {
-      // TODO Cambiar esto..
-      System.setProperty("wordnet.database.dir", "C:\\Archivos de programa\\WordNet\\2.1\\dict");
-      
       Window window = new Window();
       window.open();
     } catch (Exception e) {
@@ -266,7 +263,6 @@ public class Window {
               public void widgetSelected(SelectionEvent e) {
                 TableItem[] items = resultsTable.getItems();
                 classifyConcepts(items);
-                groupCrosscuttingMethods();
                 classifiedConceptsTable.removeAll();
                 classifiedDetailsTable.removeAll();
                 classifiedAttributeText.setText("");
@@ -634,9 +630,24 @@ public class Window {
             }
           }
           {
-            Button btnShowGraph = new Button(composite, SWT.NONE);
-            btnShowGraph.setBounds(20, 459, 75, 25);
-            btnShowGraph.setText("Show Graph");
+            Button groupButton = new Button(composite, SWT.NONE);
+            groupButton.addSelectionListener(new SelectionAdapter() {
+              @Override
+              public void widgetSelected(SelectionEvent e) {
+                
+                DirectoryDialog directoryDialog = new DirectoryDialog(shlFcaSample);
+                
+//                directoryDialog.setFilterPath(selectedDir);
+                directoryDialog.setMessage("Please select WordNet dictionary folder and click OK");
+                String dir = directoryDialog.open();
+                if (dir != null) {
+                System.setProperty("wordnet.database.dir", dir);
+                groupCrosscuttingMethods();
+                }
+              }
+            });
+            groupButton.setBounds(20, 459, 98, 25);
+            groupButton.setText("Group Concepts");
           }
         }
       }
