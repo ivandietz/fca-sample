@@ -78,10 +78,7 @@ import fca_sample.WordNetUtils;
 /**
  * TODO En general:
  * - implementar resto del algoritmo de agrupar
- * - mantener los check cuando ordena la primer tabla
- * - el agrupamiento mejor hacerlo con un boton en la anteultima pestaña, tarda mucho hacerlo en el confirm de la 2da
- * - agregar archivos de wordnet al proyecto
- * - truncar los nombres q se muestran en el grafo
+ * - truncar los nombres q se muestran en el grafo?
  * - mejorar grafo (colores, scroll, textos, tooltips, detalle del concepto, vista general, etc)
  */
 public class Window {
@@ -301,9 +298,11 @@ public class Window {
                             || collator.compare(value1, value2) > 0 && !resultsTableOrderAscendant) {
                           String[] values = { items[i].getText(0),
                               items[i].getText(1) };
+                          boolean wasChecked = items[i].getChecked();
                           items[i].dispose();
                           TableItem item = new TableItem(resultsTable, SWT.NONE, j);
                           item.setText(values);
+                          item.setChecked(wasChecked);
                           items = resultsTable.getItems();
                           break;
                         }
@@ -327,8 +326,10 @@ public class Window {
 
                 @Override
                 public void widgetSelected(SelectionEvent e) {
-                  attributesText.setText(resultsTable.getSelection()[0].getText(0));
-                  updateDetails(detailsTable, resultsTable.getSelection()[0]);
+                  if (resultsTable.getSelection().length != 0) {
+                    attributesText.setText(resultsTable.getSelection()[0].getText(0));
+                    updateDetails(detailsTable, resultsTable.getSelection()[0]);
+                  }
                 }
               });
             }
@@ -982,9 +983,9 @@ public class Window {
     vv.getRenderContext().setVertexFontTransformer(new ConstantTransformer(new Font("Arial", Font.PLAIN, 12)));       
 
     
-    BasicRendererColor<String,String> b = (BasicRendererColor) vv.getRenderer();
-    b.setTopVertex(lattice.top().getAttributes().toString());
-    b.setBottomVertex(lattice.bottom().getAttributes().toString());        
+    BasicRendererColor<String,String> renderer = (BasicRendererColor) vv.getRenderer();
+    renderer.setTopVertex(lattice.top().getAttributes().toString());
+    renderer.setBottomVertex(lattice.bottom().getAttributes().toString());        
      
     DefaultModalGraphMouse gm = new DefaultModalGraphMouse();
     gm.setMode(ModalGraphMouse.Mode.TRANSFORMING);
@@ -996,7 +997,7 @@ public class Window {
     if (paintClassification){
       TableItem[] items = classifiedConceptsTable.getItems();
       for (TableItem tableItem : items) {
-        b.setVertexColor("[" + tableItem.getText(0) + "]", Color.GREEN);      
+        renderer.setVertexColor("[" + tableItem.getText(0) + "]", Color.GREEN);      
       }
     }
     
