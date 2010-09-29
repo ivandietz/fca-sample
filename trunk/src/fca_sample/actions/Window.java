@@ -707,6 +707,8 @@ public class Window {
       String components[] = element.split(":");
       for (int j = 0; j < components.length; j++) {
         item.setText(j, components[j]);
+        if (j == components.length - 1)
+          item.setFont(j, new org.eclipse.swt.graphics.Font(Display.getCurrent(), "", 10, SWT.BOLD));
       }
     }
     for (int i = 0; i < table.getColumnCount(); i++)

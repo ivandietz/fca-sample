@@ -9,7 +9,6 @@ import java.util.Set;
 
 import org.eclipse.swt.widgets.TableItem;
 
-//TODO Revisar!!! Algunos no estan andando bien...
 public class Classifier {
 
   public static Criteria classify(TableItem item, HashMap classHierarchy) {
@@ -85,6 +84,8 @@ public class Classifier {
       } else
         return false; // we only want methods
     }
+    if (methodHierarchy.size() < 2)
+      return false; // we want at least 2 different methods
     // search for shared parents
     Iterator<String> i = methodHierarchy.keySet().iterator();
     String element = i.next();
@@ -119,6 +120,8 @@ public class Classifier {
       } else
         return false; // we only want methods
     }
+    if (methodHierarchy.size() < 2)
+      return false; // we want at least 2 different methods
     // search for shared parents
     Iterator<String> i = methodHierarchy.keySet().iterator();
     String element = i.next();
