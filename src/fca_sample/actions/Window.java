@@ -376,7 +376,7 @@ public class Window {
             button.addSelectionListener(new SelectionAdapter() {
               @Override
               public void widgetSelected(SelectionEvent e) {
-                drawGraph(false);
+                drawGraph(false,"Lattice");
               }
             });
             button.setBounds(94, 461, 75, 25);
@@ -521,7 +521,7 @@ public class Window {
             button.addSelectionListener(new SelectionAdapter() {
               @Override
               public void widgetSelected(SelectionEvent e) {
-                drawGraph(true);
+                drawGraph(true,criteriaCombo.getText());                
               }
             });
             button.setBounds(20, 459, 75, 25);
@@ -948,15 +948,17 @@ public class Window {
     return false;
   }
   
-  public void drawGraph(boolean paintClassification){
+  public void drawGraph(boolean paintClassification, String frameName){
     DelegateForestColor<String, String> f = new DelegateForestColor<String, String>();
     Lattice lattice = fca.getLattice();
+    Map<String, String> vertexMessages = new HashMap<String, String>();
     
     // add vertex
     List<Concept> concepts = fca.getConcepts();
     for (Iterator iterator = concepts.iterator(); iterator.hasNext();) {
       Concept concept = (Concept) iterator.next();
         f.addVertex(concept.getAttributes().toString());
+        vertexMessages.put(concept.getAttributes().toString(), concept.getObjects().toString());        
     }
     
     //add edges
@@ -989,7 +991,7 @@ public class Window {
     renderer.setTopVertex(lattice.top().getAttributes().toString());
     renderer.setBottomVertex(lattice.bottom().getAttributes().toString());        
      
-    DefaultModalGraphMouse gm = new DefaultModalGraphMouse();
+    DefaultModalGraphMouse gm = new DefaultModalGraphMouse(vertexMessages);
     gm.setMode(ModalGraphMouse.Mode.TRANSFORMING);
     gm.add(new ScalingGraphMousePlugin(new CrossoverScalingControl(), 2, 1.1f, 0.9f));
     vv.setGraphMouse(gm);
@@ -1003,7 +1005,7 @@ public class Window {
       }
     }
     
-    JFrame frame = new JFrame("Simple Graph View");
+    JFrame frame = new JFrame(frameName);
     frame.setSize(800, 600);
     frame.getContentPane().add(vv);
     frame.pack();
