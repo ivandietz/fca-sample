@@ -109,6 +109,7 @@ public class Window {
   private boolean groupedConceptsOrderAscendant = true;
   private Table groupedDetailsTable;
   private Text groupedAttributesText;
+  private Map<String, String> groupedConceptsMap;
 
   /**
    * Launch the application.
@@ -652,6 +653,17 @@ public class Window {
             groupButton.setBounds(20, 459, 98, 25);
             groupButton.setText("Group Concepts");
           }
+          {
+            Button button = new Button(composite, SWT.NONE);
+            button.addSelectionListener(new SelectionAdapter() {
+              @Override
+              public void widgetSelected(SelectionEvent e) {
+                drawGroupedGraph();
+              }
+            });
+            button.setBounds(124, 459, 75, 25);
+            button.setText("Show Graph");
+          }
         }
       }
     }
@@ -883,21 +895,29 @@ public class Window {
     Map<String, String> returnMap = new HashMap<String, String>();
     Set<String> attributesSet = items.keySet();
     String[] attributesArray = attributesSet.toArray(new String[0]);
+    groupedConceptsMap = new HashMap<String, String>();
     for (int i = 0; i < attributesArray.length; i++) {
       //si esta en blanco ya fue usado...
       boolean used = attributesArray[i].equals("");
-      for (int j = i + 1; !used && j < attributesArray.length; j++) {
-        if (isRelated(attributesArray[i], attributesArray[j])){
-          String newKey = attributesArray[i] + ", " + attributesArray[j];
-          String newValue = items.get(attributesArray[i]) + ", " + items.get(attributesArray[j]);
-          returnMap.put(eliminateDuplicates(newKey), newValue);
-          // "sacar" de la lista el concepto que ya agregamos y pasar al siguiente
-          attributesArray[j] = "";
-          used = true;
+      if(!used) {
+        String newKey = attributesArray[i];
+        String newValue = items.get(attributesArray[i]);
+        String children = attributesArray[i];
+        boolean group = false;
+        for (int j = i + 1; j < attributesArray.length; j++) {
+          if (isRelated(attributesArray[i], attributesArray[j])){
+            newKey = newKey + ", " + attributesArray[j];
+            newValue = newValue + ", " + items.get(attributesArray[j]);
+            children = children + ":" + attributesArray[j];
+            group = true;
+            // "sacar" de la lista el concepto que ya agregamos y pasar al siguiente
+            attributesArray[j] = "";
+          }
         }
+        returnMap.put(eliminateDuplicates(newKey), newValue);
+        if(group)
+          groupedConceptsMap.put(eliminateDuplicates(newKey), children);
       }
-      if (!used) 
-        returnMap.put(attributesArray[i], items.get(attributesArray[i]));
     }
     return returnMap;
   }
@@ -972,8 +992,38 @@ public class Window {
       }
     }
     
+    draw(f, paintClassification, frameName, vertexMessages);
+  }
+  
+  public void drawGroupedGraph(){
+    DelegateForestColor<String, String> groupedGraph = new DelegateForestColor<String, String>();
+    groupedGraph.addVertex("[]");
+    TableItem[] items = grouped_concepts.getItems(); 
+    int edgeCount = 0;
+    for (int i = 0; i < items.length; i++) {
+      if(groupedConceptsMap.containsKey(items[i].getText(0))){
+        groupedGraph.addVertex(items[i].getText(0), Color.YELLOW);
+        groupedGraph.addEdge(String.valueOf(edgeCount), "[]", items[i].getText(0));
+        edgeCount++;
+        String[] childs = groupedConceptsMap.get(items[i].getText(0)).split(":");
+        for (int j = 0; j < childs.length; j++) {
+          groupedGraph.addVertex(childs[j], Color.GREEN);
+          groupedGraph.addEdge(String.valueOf(edgeCount),items[i].getText(0),childs[j]);
+          edgeCount++; 
+        }
+      } else {
+        groupedGraph.addVertex(items[i].getText(0), Color.GREEN);
+        groupedGraph.addEdge(String.valueOf(edgeCount), "[]", items[i].getText(0));
+        edgeCount++;
+      }
+    }
+    
+    draw(groupedGraph, false, "Grouped Crosscuting Concepts", null);
+  }
+  
+  public void draw(DelegateForestColor<String, String> f, boolean paintClassification, String frameName, Map<String, String> vertexMessages){
     Layout<String, String> layout = new TreeLayout<String,String>(f, 100, 100);
-   
+    
     VisualizationViewer<String,String> vv = new VisualizationViewer<String,String>(layout);
     vv.setPreferredSize(new Dimension(1200, 600));
     vv.setRenderer(new BasicRendererColor<String,String>(f.getVertexColors()));
@@ -986,6 +1036,7 @@ public class Window {
     //LETRA
     vv.getRenderContext().setVertexFontTransformer(new ConstantTransformer(new Font("Arial", Font.PLAIN, 12)));       
 
+    Lattice lattice = fca.getLattice();
     
     BasicRendererColor<String,String> renderer = (BasicRendererColor) vv.getRenderer();
     renderer.setTopVertex(lattice.top().getAttributes().toString());
@@ -1009,6 +1060,6 @@ public class Window {
     frame.setSize(800, 600);
     frame.getContentPane().add(vv);
     frame.pack();
-    frame.setVisible(true);    
+    frame.setVisible(true);  
   }
 }
