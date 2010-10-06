@@ -1022,7 +1022,7 @@ public class Window {
   }
   
   public void draw(DelegateForestColor<String, String> f, boolean paintClassification, String frameName, Map<String, String> vertexMessages){
-    Layout<String, String> layout = new TreeLayout<String,String>(f, 100, 100);
+    Layout<String, String> layout = new TreeLayout<String,String>(f, 100, 300);
     
     VisualizationViewer<String,String> vv = new VisualizationViewer<String,String>(layout);
     vv.setPreferredSize(new Dimension(1200, 600));
