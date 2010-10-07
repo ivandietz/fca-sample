@@ -110,6 +110,7 @@ public class Window {
   private Table groupedDetailsTable;
   private Text groupedAttributesText;
   private Map<String, String> groupedConceptsMap;
+  private Text elementsMin;
 
   /**
    * Launch the application.
@@ -146,11 +147,11 @@ public class Window {
    */
   protected void createContents() {
     shlFcaSample = new Shell(SWT.MIN);
-    shlFcaSample.setSize(1000, 580);
+    shlFcaSample.setSize(1000, 568);
     shlFcaSample.setText("FCA Sample");
     {
       tabFolder = new TabFolder(shlFcaSample, SWT.NONE);
-      tabFolder.setBounds(0, 10, 992, 522);
+      tabFolder.setBounds(0, 10, 992, 530);
       {
         TabItem tbtmSelectProjects = new TabItem(tabFolder, SWT.NONE);
         tbtmSelectProjects.setText("Select Projects");
@@ -196,7 +197,7 @@ public class Window {
                 }
               }
             });
-            btnRunFcaAlgorithm.setBounds(10, 159, 146, 23);
+            btnRunFcaAlgorithm.setBounds(10, 254, 202, 23);
             btnRunFcaAlgorithm.setText("Run FCA Algorithm");
           }
           {
@@ -230,11 +231,25 @@ public class Window {
           {
             lblRunning = new Label(composite, SWT.NONE);
             lblRunning.setFont(SWTResourceManager.getFont("Tahoma", 8, SWT.BOLD));
-            lblRunning.setBounds(193, 164, 66, 13);
+            lblRunning.setBounds(218, 259, 66, 13);
           }
           {
             tree = new Tree(composite, SWT.CHECK);
-            tree.setBounds(332, 42, 300, 444);
+            tree.setBounds(332, 42, 642, 450);
+            {
+              Group grpCrosscutingMethods = new Group(composite, SWT.NONE);
+              grpCrosscutingMethods.setText("Crosscuting Methods");
+              grpCrosscutingMethods.setBounds(10, 140, 283, 108);
+              {
+                Label lblMininumNumberOf = new Label(grpCrosscutingMethods, SWT.NONE);
+                lblMininumNumberOf.setBounds(10, 21, 225, 15);
+                lblMininumNumberOf.setText("Mininum number of elements per concept");
+              }
+              {
+                elementsMin = new Text(grpCrosscutingMethods, SWT.BORDER);
+                elementsMin.setBounds(241, 18, 32, 21);
+              }
+            }
             tree.addListener(SWT.Selection, new Listener() {
               public void handleEvent(Event event) {
                   if (event.detail == SWT.CHECK) {
@@ -269,8 +284,8 @@ public class Window {
                 tabFolder.setSelection(2);
               }
             });
-            btnConfirm.setBounds(20, 461, 68, 25);
-            btnConfirm.setText("Confirm");
+            btnConfirm.setBounds(10, 463, 103, 25);
+            btnConfirm.setText("Confirm Selected");
           }
           {
             Group grpLatticeConcepts = new Group(composite, SWT.NONE);
@@ -380,13 +395,13 @@ public class Window {
                 drawGraph(false,"Lattice");
               }
             });
-            button.setBounds(94, 461, 75, 25);
+            button.setBounds(119, 463, 75, 25);
             button.setText("Show Graph");
           }
           {
             conceptsNumber = new Label(composite, SWT.NONE);
             conceptsNumber.setText("Total concepts: ");
-            conceptsNumber.setBounds(175, 466, 167, 15);
+            conceptsNumber.setBounds(200, 468, 167, 15);
           }
         }
       }
@@ -421,7 +436,7 @@ public class Window {
               });
             }
             {
-              classifiedConceptsTable = new Table(grpConcepts, SWT.BORDER | SWT.FULL_SELECTION);
+              classifiedConceptsTable = new Table(grpConcepts, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION);
               classifiedConceptsTable.setLinesVisible(true);
               classifiedConceptsTable.setHeaderVisible(true);
               classifiedConceptsTable.setBounds(10, 21, 316, 389);
@@ -525,8 +540,18 @@ public class Window {
                 drawGraph(true,criteriaCombo.getText());                
               }
             });
-            button.setBounds(20, 459, 75, 25);
+            button.setBounds(205, 463, 99, 25);
             button.setText("Show Graph");
+          }
+          {
+            Button btnExcludeSelected = new Button(composite, SWT.NONE);
+            btnExcludeSelected.setBounds(10, 463, 99, 25);
+            btnExcludeSelected.setText("Exclude Selected");
+          }
+          {
+            Button btnChooseColor = new Button(composite, SWT.NONE);
+            btnChooseColor.setBounds(115, 463, 84, 25);
+            btnChooseColor.setText("Choose Color");
           }
 
         }
@@ -540,12 +565,12 @@ public class Window {
           {
             Group grpConcepts_1 = new Group(composite, SWT.NONE);
             grpConcepts_1.setText("Concepts");
-            grpConcepts_1.setBounds(10, 10, 332, 447);
+            grpConcepts_1.setBounds(10, 37, 332, 420);
             {
-              grouped_concepts = new Table(grpConcepts_1, SWT.BORDER | SWT.FULL_SELECTION);
+              grouped_concepts = new Table(grpConcepts_1, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION);
               grouped_concepts.setLinesVisible(true);
               grouped_concepts.setHeaderVisible(true);
-              grouped_concepts.setBounds(10, 21, 316, 416);
+              grouped_concepts.setBounds(10, 21, 316, 389);
               {
                 TableColumn tableColumn = new TableColumn(grouped_concepts, SWT.NONE);
                 tableColumn.setResizable(false);
@@ -650,8 +675,8 @@ public class Window {
                 }
               }
             });
-            groupButton.setBounds(20, 459, 98, 25);
-            groupButton.setText("Group Concepts");
+            groupButton.setBounds(10, 10, 332, 25);
+            groupButton.setText("Group Concepts (only crosscutting)");
           }
           {
             Button button = new Button(composite, SWT.NONE);
@@ -661,8 +686,18 @@ public class Window {
                 drawGroupedGraph();
               }
             });
-            button.setBounds(124, 459, 75, 25);
+            button.setBounds(205, 463, 99, 25);
             button.setText("Show Graph");
+          }
+          {
+            Button button = new Button(composite, SWT.NONE);
+            button.setBounds(10, 463, 99, 25);
+            button.setText("Exclude Selected");
+          }
+          {
+            Button button = new Button(composite, SWT.NONE);
+            button.setBounds(115, 463, 84, 25);
+            button.setText("Choose Color");
           }
         }
       }
