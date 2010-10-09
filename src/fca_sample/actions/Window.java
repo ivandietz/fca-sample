@@ -445,7 +445,7 @@ public class Window {
               {
                 TableColumn tblclmnAttributes = new TableColumn(classifiedConceptsTable, SWT.NONE);
                 tblclmnAttributes.setResizable(false);
-                tblclmnAttributes.setWidth(312);
+                tblclmnAttributes.setWidth(280);
                 tblclmnAttributes.setText("Attributes");
                 tblclmnAttributes.addListener(SWT.Selection, new Listener() {
                   public void handleEvent(Event e) {
@@ -460,9 +460,13 @@ public class Window {
                             || collator.compare(value1, value2) > 0 && !classifiedConceptsTableOrderAscendant) {
                           String[] values = { items[i].getText(0),
                               items[i].getText(1) };
+                          boolean wasChecked = items[i].getChecked();
+                          org.eclipse.swt.graphics.Color color = items[i].getBackground(2);
                           items[i].dispose();
                           TableItem item = new TableItem(classifiedConceptsTable, SWT.NONE, j);
                           item.setText(values);
+                          item.setChecked(wasChecked);
+                          item.setBackground(2, color);
                           items = classifiedConceptsTable.getItems();
                           break;
                         }
@@ -477,6 +481,11 @@ public class Window {
                 tblclmnElements.setResizable(false);
                 tblclmnElements.setText("Elements");
               }
+              {
+                TableColumn tblclmnColor = new TableColumn(classifiedConceptsTable, SWT.NONE);
+                tblclmnColor.setResizable(false);
+                tblclmnColor.setWidth(32);
+              }
               classifiedConceptsTable.addSelectionListener(new SelectionListener() {
                 @Override
                 public void widgetDefaultSelected(SelectionEvent e) {
@@ -486,8 +495,10 @@ public class Window {
 
                 @Override
                 public void widgetSelected(SelectionEvent e) {
-                  classifiedAttributeText.setText(classifiedConceptsTable.getSelection()[0].getText(0));
-                  updateDetails(classifiedDetailsTable, classifiedConceptsTable.getSelection()[0]);
+                  if (classifiedConceptsTable.getSelection().length != 0) {
+                    classifiedAttributeText.setText(classifiedConceptsTable.getSelection()[0].getText(0));
+                    updateDetails(classifiedDetailsTable, classifiedConceptsTable.getSelection()[0]);
+                  }
                 }
               });
             }
@@ -552,6 +563,24 @@ public class Window {
           }
           {
             Button btnChooseColor = new Button(composite, SWT.NONE);
+            btnChooseColor.addSelectionListener(new SelectionAdapter() {
+              @Override
+              public void widgetSelected(SelectionEvent e) {
+                ColorDialog cd = new ColorDialog(shlFcaSample);
+                cd.setText("ColorDialog Demo");
+                cd.setRGB(new RGB(255, 255, 255));
+                RGB newColor = cd.open();
+                if (newColor == null) {
+                  return;
+                }
+                TableItem[] items = classifiedConceptsTable.getItems(); 
+                for (int i = 0; i < items.length; i++) {
+                  if (items[i].getChecked()) {
+                    items[i].setBackground(2, new org.eclipse.swt.graphics.Color(Display.getCurrent(), newColor.red, newColor.green, newColor.blue));
+                  }
+                }
+              }
+            });
             btnChooseColor.setBounds(115, 463, 84, 25);
             btnChooseColor.setText("Choose Color");
           }
@@ -576,7 +605,7 @@ public class Window {
               {
                 TableColumn tableColumn = new TableColumn(grouped_concepts, SWT.NONE);
                 tableColumn.setResizable(false);
-                tableColumn.setWidth(312);
+                tableColumn.setWidth(280);
                 tableColumn.setText("Attributes");
                 tableColumn.addListener(SWT.Selection, new Listener() {
                   public void handleEvent(Event e) {
@@ -591,9 +620,13 @@ public class Window {
                             || collator.compare(value1, value2) > 0 && !groupedConceptsOrderAscendant) {
                           String[] values = { items[i].getText(0),
                               items[i].getText(1) };
+                          boolean wasChecked = items[i].getChecked();
+                          org.eclipse.swt.graphics.Color color = items[i].getBackground(2);
                           items[i].dispose();
                           TableItem item = new TableItem(grouped_concepts, SWT.NONE, j);
                           item.setText(values);
+                          item.setChecked(wasChecked);
+                          item.setBackground(2, color);
                           items = grouped_concepts.getItems();
                           break;
                         }
@@ -608,6 +641,11 @@ public class Window {
                 tableColumn.setResizable(false);
                 tableColumn.setText("Elements");
               }
+              {
+                TableColumn tableColumn = new TableColumn(grouped_concepts, SWT.NONE);
+                tableColumn.setResizable(false);
+                tableColumn.setWidth(32);
+              }
               grouped_concepts.addSelectionListener(new SelectionListener() {
                 @Override
                 public void widgetDefaultSelected(SelectionEvent e) {
@@ -617,8 +655,10 @@ public class Window {
 
                 @Override
                 public void widgetSelected(SelectionEvent e) {
-                  groupedAttributesText.setText(grouped_concepts.getSelection()[0].getText(0));
-                  updateDetails(groupedDetailsTable, grouped_concepts.getSelection()[0]);
+                  if (grouped_concepts.getSelection().length != 0) {
+                    groupedAttributesText.setText(grouped_concepts.getSelection()[0].getText(0));
+                    updateDetails(groupedDetailsTable, grouped_concepts.getSelection()[0]);
+                  }
                 }
               });
             }
@@ -707,6 +747,12 @@ public class Window {
                 RGB newColor = cd.open();
                 if (newColor == null) {
                   return;
+                }
+                TableItem[] items = grouped_concepts.getItems(); 
+                for (int i = 0; i < items.length; i++) {
+                  if (items[i].getChecked()) {
+                    items[i].setBackground(2, new org.eclipse.swt.graphics.Color(Display.getCurrent(), newColor.red, newColor.green, newColor.blue));
+                  }
                 }
               }
             });
@@ -798,6 +844,7 @@ public class Window {
         item = new TableItem(classifiedConceptsTable, SWT.NONE);
         item.setText(0, (classifiedItem.getItem().getText(0)));
         item.setText(1, (classifiedItem.getItem().getText(1)));
+        item.setBackground(2, new org.eclipse.swt.graphics.Color(Display.getCurrent(), 0, 255, 0));
       }
     }
     shlFcaSample.update();
@@ -879,6 +926,11 @@ public class Window {
       item = new TableItem(grouped_concepts, SWT.NONE);
       item.setText(0, key);
       item.setText(1, groupedConcepts.get(key));
+      if(groupedConceptsMap.containsKey(item.getText(0))){
+        item.setBackground(2, new org.eclipse.swt.graphics.Color(Display.getCurrent(), 0, 255, 255));
+      } else {
+        item.setBackground(2, new org.eclipse.swt.graphics.Color(Display.getCurrent(), 0, 255, 0));
+      }
     }
     
   }
@@ -1026,8 +1078,8 @@ public class Window {
     List<Concept> concepts = fca.getConcepts();
     for (Iterator iterator = concepts.iterator(); iterator.hasNext();) {
       Concept concept = (Concept) iterator.next();
-        f.addVertex(concept.getAttributes().toString());
-        vertexMessages.put(concept.getAttributes().toString(), concept.getObjects().toString());        
+        f.addVertex(concept.getAttributes().toString(), new Color(255, 255, 140));
+        vertexMessages.put(concept.getAttributes().toString(), concept.getObjects().toString());       
     }
     
     //add edges
@@ -1046,12 +1098,12 @@ public class Window {
   
   public void drawGroupedGraph(){
     DelegateForestColor<String, String> groupedGraph = new DelegateForestColor<String, String>();
-    groupedGraph.addVertex("[]");
+    groupedGraph.addVertex("[]", new Color(255, 255, 140));
     TableItem[] items = grouped_concepts.getItems(); 
     int edgeCount = 0;
     for (int i = 0; i < items.length; i++) {
       if(groupedConceptsMap.containsKey(items[i].getText(0))){
-        groupedGraph.addVertex(items[i].getText(0), Color.YELLOW);
+        groupedGraph.addVertex(items[i].getText(0), new Color(items[i].getBackground(2).getRed(), items[i].getBackground(2).getGreen(), items[i].getBackground(2).getBlue()));
         groupedGraph.addEdge(String.valueOf(edgeCount), "[]", items[i].getText(0));
         edgeCount++;
         String[] childs = groupedConceptsMap.get(items[i].getText(0)).split(":");
@@ -1061,7 +1113,7 @@ public class Window {
           edgeCount++; 
         }
       } else {
-        groupedGraph.addVertex(items[i].getText(0), Color.GREEN);
+        groupedGraph.addVertex(items[i].getText(0), new Color(items[i].getBackground(2).getRed(), items[i].getBackground(2).getGreen(), items[i].getBackground(2).getBlue()));
         groupedGraph.addEdge(String.valueOf(edgeCount), "[]", items[i].getText(0));
         edgeCount++;
       }
@@ -1101,7 +1153,7 @@ public class Window {
     if (paintClassification){
       TableItem[] items = classifiedConceptsTable.getItems();
       for (TableItem tableItem : items) {
-        renderer.setVertexColor("[" + tableItem.getText(0) + "]", Color.GREEN);      
+        renderer.setVertexColor("[" + tableItem.getText(0) + "]", new Color(tableItem.getBackground(2).getRed(), tableItem.getBackground(2).getGreen(), tableItem.getBackground(2).getBlue()));      
       }
     }
     
