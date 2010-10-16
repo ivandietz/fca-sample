@@ -1,16 +1,15 @@
 package fca_sample.actions;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
+import java.awt.Color;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
 import edu.uci.ics.jung.visualization.VisualizationViewer;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import java.awt.Color;
 
 public class GraphViewer extends JFrame {
 
@@ -35,7 +34,7 @@ public class GraphViewer extends JFrame {
   /**
    * Create the frame.
    */
-  public GraphViewer(VisualizationViewer<String,String> graphView) {
+  public GraphViewer(VisualizationViewer<String,String> graphView, JList attributesList, JList elementsList) {
     setTitle("Concepts Lattice");
 //    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setBounds(100, 100, 1200, 700);
@@ -79,19 +78,21 @@ public class GraphViewer extends JFrame {
       contentPane.add(lblAttributes);
     }
     {
-      JLabel lblElements = new JLabel("Elements");
+      JLabel lblElements = new JLabel("Elements (Class | Method | Param)");
       lblElements.setBounds(19, 348, 244, 14);
       contentPane.add(lblElements);
     }
     {
-      JList list = new JList();
-      list.setBounds(10, 186, 264, 151);
-      contentPane.add(list);
+      JScrollPane scrollAttributes = new JScrollPane(attributesList);
+      scrollAttributes.setBounds(10, 186, 264, 151);
+      scrollAttributes.getViewport().add(attributesList); 
+      contentPane.add(scrollAttributes);
     }
     {
-      JList list = new JList();
-      list.setBounds(10, 373, 264, 278);
-      contentPane.add(list);
+      JScrollPane scrollElements = new JScrollPane(elementsList);
+      scrollElements.setBounds(10, 373, 264, 278);
+      scrollElements.getViewport().add(elementsList);
+      contentPane.add(scrollElements);
     }
     {
       JPanel panel = new JPanel();
