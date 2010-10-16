@@ -14,8 +14,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import javax.swing.JFrame;
-
 import org.apache.commons.collections15.functors.ConstantTransformer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
@@ -1126,7 +1124,7 @@ public class Window {
     Layout<String, String> layout = new TreeLayout<String,String>(f, 100, 300);
     
     VisualizationViewer<String,String> vv = new VisualizationViewer<String,String>(layout);
-    vv.setPreferredSize(new Dimension(1200, 600));
+    vv.setPreferredSize(new Dimension(880, 630));
     vv.setRenderer(new BasicRendererColor<String,String>(f.getVertexColors()));
     vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<String>());    
     vv.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
@@ -1157,10 +1155,8 @@ public class Window {
       }
     }
     
-    JFrame frame = new JFrame(frameName);
-    frame.setSize(800, 600);
-    frame.getContentPane().add(vv);
-    frame.pack();
-    frame.setVisible(true);  
+    GraphViewer graph = new GraphViewer(vv);
+    graph.setVisible(true);
+    
   }
 }
