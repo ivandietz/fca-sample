@@ -14,6 +14,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import javax.swing.JList;
+
 import org.apache.commons.collections15.functors.ConstantTransformer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
@@ -111,6 +113,10 @@ public class Window {
   private Text groupedAttributesText;
   private Map<String, String> groupedConceptsMap;
   private Text elementsMin;
+  
+  //Elements for GraphViewer
+  public JList attributesList;
+  public JList elementsList;
 
   /**
    * Launch the application.
@@ -707,7 +713,7 @@ public class Window {
                 DirectoryDialog directoryDialog = new DirectoryDialog(shlFcaSample);
                 
 //                directoryDialog.setFilterPath(selectedDir);
-                directoryDialog.setMessage("Please select WordNet dictionary folder and click OK");
+                directoryDialog.setMessage("Please select WordNet DICTIONARY folder (\"dict\") and click OK");
                 String dir = directoryDialog.open();
                 if (dir != null) {
                 System.setProperty("wordnet.database.dir", dir);
@@ -1140,8 +1146,10 @@ public class Window {
     BasicRendererColor<String,String> renderer = (BasicRendererColor) vv.getRenderer();
     renderer.setTopVertex(lattice.top().getAttributes().toString());
     renderer.setBottomVertex(lattice.bottom().getAttributes().toString());        
-     
-    DefaultModalGraphMouse gm = new DefaultModalGraphMouse(vertexMessages);
+    
+    attributesList = new JList();
+    elementsList = new JList();
+    DefaultModalGraphMouse gm = new DefaultModalGraphMouse(vertexMessages, attributesList, elementsList);
     gm.setMode(ModalGraphMouse.Mode.TRANSFORMING);
     gm.add(new ScalingGraphMousePlugin(new CrossoverScalingControl(), 2, 1.1f, 0.9f));
     vv.setGraphMouse(gm);
@@ -1155,7 +1163,7 @@ public class Window {
       }
     }
     
-    GraphViewer graph = new GraphViewer(vv);
+    GraphViewer graph = new GraphViewer(vv, attributesList, elementsList);
     graph.setVisible(true);
     
   }
