@@ -244,7 +244,7 @@ public class Window {
             tree.setBounds(332, 42, 642, 450);
             {
               Group grpCrosscutingMethods = new Group(composite, SWT.NONE);
-              grpCrosscutingMethods.setText("Crosscuting Methods");
+              grpCrosscutingMethods.setText("Classification");
               grpCrosscutingMethods.setBounds(10, 140, 283, 108);
               {
                 Label lblMininumNumberOf = new Label(grpCrosscutingMethods, SWT.NONE);
@@ -253,6 +253,7 @@ public class Window {
               }
               {
                 elementsMin = new Text(grpCrosscutingMethods, SWT.BORDER);
+                elementsMin.setText("0");
                 elementsMin.setBounds(241, 18, 32, 21);
               }
             }
@@ -828,9 +829,14 @@ public class Window {
   }
 
   private void classifyConcepts(TableItem[] items) {
+    int min = 0;
+    try {
+      min = Integer.valueOf(elementsMin.getText());
+    } catch (NumberFormatException e){
+    }
     classifiedItems.clear();
     for (int i = 0; i < items.length; i++) {
-      if (items[i].getChecked()) {
+      if (items[i].getChecked() && items[i].getText(1).split(", ").length >= min) {
         classifiedItems.add(new ClassifiedTableItem(Classifier.classify(items[i], fca.getHierarchy()).getName(), items[i]));
       }
     }
