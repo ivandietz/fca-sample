@@ -35,6 +35,7 @@ public class GraphViewer extends JFrame {
    * Create the frame.
    */
   public GraphViewer(VisualizationViewer<String,String> graphView, JList attributesList, JList elementsList) {
+    setResizable(false);
     setTitle("Concepts Lattice");
 //    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setBounds(100, 100, 1200, 700);
@@ -48,13 +49,13 @@ public class GraphViewer extends JFrame {
       contentPane.add(lblReferences);
     }
     {
-      JLabel lblP = new JLabel("T - Explore Lattice Mode");
-      lblP.setBounds(20, 36, 254, 14);
+      JLabel lblP = new JLabel("T - Transform Mode (Move Lattice)");
+      lblP.setBounds(20, 61, 254, 14);
       contentPane.add(lblP);
     }
     {
-      JLabel lblTSelect = new JLabel("P - Select Concept Mode");
-      lblTSelect.setBounds(19, 61, 255, 14);
+      JLabel lblTSelect = new JLabel("P - Pick Mode (Select Concepts)");
+      lblTSelect.setBounds(20, 36, 255, 14);
       contentPane.add(lblTSelect);
     }
     {
