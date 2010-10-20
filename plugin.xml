@@ -9,17 +9,17 @@
             visible="true"
             id="FCA_Sample.actionSet">
          <menu
-               label="Sample &amp;Menu"
+               label="Aspect &amp;Mining"
                id="sampleMenu">
             <separator
                   name="sampleGroup">
             </separator>
          </menu>
          <action
-               label="&amp;FCA Sample"
+               label="&amp;FCA Tool"
                icon="icons/sample.gif"
                class="fca_sample.actions.SampleAction"
-               tooltip="FCA Sample"
+               tooltip="FCA Tool for Aspect Mining"
                menubarPath="sampleMenu/sampleGroup"
                toolbarPath="sampleGroup"
                id="fca_sample.actions.SampleAction">

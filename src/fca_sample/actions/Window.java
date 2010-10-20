@@ -78,10 +78,9 @@ import fca_sample.TreeUtils;
 import fca_sample.WordNetUtils;
 
 /**
- * TODO En general:
- * - implementar resto del algoritmo de agrupar
- * - truncar los nombres q se muestran en el grafo?
- * - mejorar grafo (colores, scroll, textos, tooltips, detalle del concepto, vista general, etc)
+ * 
+ * @author Cristian Vitale & Ivan Dietz
+ *
  */
 public class Window {
 
@@ -154,7 +153,7 @@ public class Window {
   protected void createContents() {
     shlFcaSample = new Shell(SWT.MIN);
     shlFcaSample.setSize(1000, 568);
-    shlFcaSample.setText("FCA Sample");
+    shlFcaSample.setText("FCA Tool for Aspect Mining");
     {
       tabFolder = new TabFolder(shlFcaSample, SWT.NONE);
       tabFolder.setBounds(0, 10, 992, 530);
@@ -256,6 +255,22 @@ public class Window {
                 elementsMin.setText("0");
                 elementsMin.setBounds(241, 18, 32, 21);
               }
+            }
+            {
+              Label lblVersionDePrueba = new Label(composite, SWT.NONE);
+              lblVersionDePrueba.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.ITALIC));
+              lblVersionDePrueba.setBounds(10, 435, 167, 15);
+              lblVersionDePrueba.setText("Version de Prueba, sin terminar.");
+            }
+            {
+              Label lblCristianVitale = new Label(composite, SWT.NONE);
+              lblCristianVitale.setBounds(10, 456, 129, 15);
+              lblCristianVitale.setText("Cristian Vitale, Ivan Dietz");
+            }
+            {
+              Label lblOctubreDe = new Label(composite, SWT.NONE);
+              lblOctubreDe.setBounds(10, 477, 86, 15);
+              lblOctubreDe.setText("Octubre de 2010");
             }
             tree.addListener(SWT.Selection, new Listener() {
               public void handleEvent(Event event) {
@@ -558,13 +573,8 @@ public class Window {
                 drawGraph(true,criteriaCombo.getText());                
               }
             });
-            button.setBounds(205, 463, 99, 25);
+            button.setBounds(100, 463, 99, 25);
             button.setText("Show Graph");
-          }
-          {
-            Button btnExcludeSelected = new Button(composite, SWT.NONE);
-            btnExcludeSelected.setBounds(10, 463, 99, 25);
-            btnExcludeSelected.setText("Exclude Selected");
           }
           {
             Button btnChooseColor = new Button(composite, SWT.NONE);
@@ -586,7 +596,7 @@ public class Window {
                 }
               }
             });
-            btnChooseColor.setBounds(115, 463, 84, 25);
+            btnChooseColor.setBounds(10, 463, 84, 25);
             btnChooseColor.setText("Choose Color");
           }
 
@@ -714,7 +724,7 @@ public class Window {
                 DirectoryDialog directoryDialog = new DirectoryDialog(shlFcaSample);
                 
 //                directoryDialog.setFilterPath(selectedDir);
-                directoryDialog.setMessage("Please select WordNet DICTIONARY folder (\"dict\") and click OK");
+                directoryDialog.setMessage("Please select WordNet DICTIONARY folder (\"dict\").");
                 String dir = directoryDialog.open();
                 if (dir != null) {
                 System.setProperty("wordnet.database.dir", dir);
@@ -723,7 +733,7 @@ public class Window {
               }
             });
             groupButton.setBounds(10, 10, 332, 25);
-            groupButton.setText("Group Concepts (only crosscutting)");
+            groupButton.setText("Group Crosscutting Concepts (requires WordNet)");
           }
           {
             Button button = new Button(composite, SWT.NONE);
@@ -733,13 +743,8 @@ public class Window {
                 drawGroupedGraph();
               }
             });
-            button.setBounds(205, 463, 99, 25);
+            button.setBounds(100, 463, 99, 25);
             button.setText("Show Graph");
-          }
-          {
-            Button button = new Button(composite, SWT.NONE);
-            button.setBounds(10, 463, 99, 25);
-            button.setText("Exclude Selected");
           }
           {
             Button button = new Button(composite, SWT.NONE);
@@ -761,7 +766,7 @@ public class Window {
                 }
               }
             });
-            button.setBounds(115, 463, 84, 25);
+            button.setBounds(10, 463, 84, 25);
             button.setText("Choose Color");
           }
         }
