@@ -111,6 +111,7 @@ public class Window {
   private Table groupedDetailsTable;
   private Text groupedAttributesText;
   private Map<String, String> groupedConceptsMap;
+  private Text attributesMin;
   private Text elementsMin;
   
   //Elements for GraphViewer
@@ -165,7 +166,7 @@ public class Window {
           tbtmSelectProjects.setControl(composite);
           {
             projectsCombo = new Combo(composite, SWT.READ_ONLY);
-            projectsCombo.setBounds(10, 42, 283, 21);
+            projectsCombo.setBounds(10, 42, 316, 23);
             fillProjectsMap();
             Iterator it = projectsMap.entrySet().iterator();
             while (it.hasNext()) {
@@ -208,7 +209,7 @@ public class Window {
           {
             Group grpCodeElements = new Group(composite, SWT.NONE);
             grpCodeElements.setText("Code Elements");
-            grpCodeElements.setBounds(10, 82, 283, 52);
+            grpCodeElements.setBounds(10, 82, 316, 52);
             {
               btnClasses = new Button(grpCodeElements, SWT.CHECK);
               btnClasses.setBounds(10, 20, 85, 16);
@@ -244,33 +245,27 @@ public class Window {
             {
               Group grpCrosscutingMethods = new Group(composite, SWT.NONE);
               grpCrosscutingMethods.setText("Classification");
-              grpCrosscutingMethods.setBounds(10, 140, 283, 108);
+              grpCrosscutingMethods.setBounds(10, 140, 316, 108);
               {
                 Label lblMininumNumberOf = new Label(grpCrosscutingMethods, SWT.NONE);
-                lblMininumNumberOf.setBounds(10, 21, 225, 15);
+                lblMininumNumberOf.setBounds(10, 42, 239, 15);
                 lblMininumNumberOf.setText("Mininum number of elements per concept");
               }
               {
                 elementsMin = new Text(grpCrosscutingMethods, SWT.BORDER);
                 elementsMin.setText("0");
-                elementsMin.setBounds(241, 18, 32, 21);
+                elementsMin.setBounds(255, 39, 32, 21);
               }
-            }
-            {
-              Label lblVersionDePrueba = new Label(composite, SWT.NONE);
-              lblVersionDePrueba.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.ITALIC));
-              lblVersionDePrueba.setBounds(10, 435, 167, 15);
-              lblVersionDePrueba.setText("Version de Prueba, sin terminar.");
-            }
-            {
-              Label lblCristianVitale = new Label(composite, SWT.NONE);
-              lblCristianVitale.setBounds(10, 456, 129, 15);
-              lblCristianVitale.setText("Cristian Vitale, Ivan Dietz");
-            }
-            {
-              Label lblOctubreDe = new Label(composite, SWT.NONE);
-              lblOctubreDe.setBounds(10, 477, 86, 15);
-              lblOctubreDe.setText("Octubre de 2010");
+              {
+                Label lblMininumNumberOf_1 = new Label(grpCrosscutingMethods, SWT.NONE);
+                lblMininumNumberOf_1.setBounds(10, 21, 239, 15);
+                lblMininumNumberOf_1.setText("Mininum number of attributes per concept");
+              }
+              {
+                attributesMin = new Text(grpCrosscutingMethods, SWT.BORDER);
+                attributesMin.setText("0");
+                attributesMin.setBounds(255, 18, 32, 21);
+              }
             }
             tree.addListener(SWT.Selection, new Listener() {
               public void handleEvent(Event event) {
@@ -834,14 +829,16 @@ public class Window {
   }
 
   private void classifyConcepts(TableItem[] items) {
-    int min = 0;
+    int minAttr = 0;
+    int minElems = 0;
     try {
-      min = Integer.valueOf(elementsMin.getText());
+      minAttr = Integer.valueOf(attributesMin.getText());
+      minElems = Integer.valueOf(elementsMin.getText());
     } catch (NumberFormatException e){
     }
     classifiedItems.clear();
     for (int i = 0; i < items.length; i++) {
-      if (items[i].getChecked() && items[i].getText(1).split(", ").length >= min) {
+      if (items[i].getChecked() && items[i].getText(0).split(", ").length >= minAttr && items[i].getText(1).split(", ").length >= minElems) {
         classifiedItems.add(new ClassifiedTableItem(Classifier.classify(items[i], fca.getHierarchy()).getName(), items[i]));
       }
     }
