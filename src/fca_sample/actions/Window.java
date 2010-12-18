@@ -1072,6 +1072,8 @@ public class Window {
           if (WordNetUtils.isRelated(a[i], b[j])) {
             matchCount++;
             matched = true;
+            a[i] = "";
+            b[j] = "";
           }
         }
       }

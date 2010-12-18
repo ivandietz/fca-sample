@@ -90,6 +90,10 @@ public final class WordNetUtils {
       antonyms.add("end");
     if (word.equals("end"))
       antonyms.add("start");
+    if (word.equals("add"))
+      antonyms.add("remove");
+    if (word.equals("remove"))
+      antonyms.add("add");
     
     return antonyms;
   }
