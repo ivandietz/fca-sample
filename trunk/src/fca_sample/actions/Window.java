@@ -1093,7 +1093,7 @@ public class Window {
     for (Iterator iterator = concepts.iterator(); iterator.hasNext();) {
       Concept concept = (Concept) iterator.next();
         f.addVertex(concept.getAttributes().toString(), new Color(255, 255, 140));
-        vertexMessages.put(concept.getAttributes().toString(), concept.getObjects().toString());       
+        vertexMessages.put(concept.getAttributes().toString(), concept.getObjects().toString());
     }
     
     //add edges
@@ -1114,26 +1114,33 @@ public class Window {
     DelegateForestColor<String, String> groupedGraph = new DelegateForestColor<String, String>();
     groupedGraph.addVertex("[]", new Color(255, 255, 140));
     TableItem[] items = grouped_concepts.getItems(); 
+    Map<String, String> vertexMessages = new HashMap<String, String>();
     int edgeCount = 0;
     for (int i = 0; i < items.length; i++) {
       if(groupedConceptsMap.containsKey(items[i].getText(0))){
-        groupedGraph.addVertex(items[i].getText(0), new Color(items[i].getBackground(2).getRed(), items[i].getBackground(2).getGreen(), items[i].getBackground(2).getBlue()));
-        groupedGraph.addEdge(String.valueOf(edgeCount), "[]", items[i].getText(0));
+        groupedGraph.addVertex("[" + items[i].getText(0) + "]", new Color(items[i].getBackground(2).getRed(), items[i].getBackground(2).getGreen(), items[i].getBackground(2).getBlue()));
+        vertexMessages.put("[" + items[i].getText(0) + "]", "[" + items[i].getText(1) + "]");
+        groupedGraph.addEdge(String.valueOf(edgeCount), "[]", "[" + items[i].getText(0) + "]");
         edgeCount++;
         String[] childs = groupedConceptsMap.get(items[i].getText(0)).split(":");
         for (int j = 0; j < childs.length; j++) {
-          groupedGraph.addVertex(childs[j], Color.GREEN);
-          groupedGraph.addEdge(String.valueOf(edgeCount),items[i].getText(0),childs[j]);
+          groupedGraph.addVertex("[" + childs[j] + "]", Color.GREEN);
+          
+          //TODO seguir aca...
+          
+//          vertexMessages.put("[" + childs[j] + "]", "[" +  + "]");
+          groupedGraph.addEdge(String.valueOf(edgeCount), "[" + items[i].getText(0) + "]", "[" + childs[j] + "]");
           edgeCount++; 
         }
       } else {
-        groupedGraph.addVertex(items[i].getText(0), new Color(items[i].getBackground(2).getRed(), items[i].getBackground(2).getGreen(), items[i].getBackground(2).getBlue()));
-        groupedGraph.addEdge(String.valueOf(edgeCount), "[]", items[i].getText(0));
+        groupedGraph.addVertex("[" + items[i].getText(0) + "]", new Color(items[i].getBackground(2).getRed(), items[i].getBackground(2).getGreen(), items[i].getBackground(2).getBlue()));
+        vertexMessages.put("[" + items[i].getText(0) + "]", "[" + items[i].getText(1) + "]");
+        groupedGraph.addEdge(String.valueOf(edgeCount), "[]", "[" + items[i].getText(0) + "]");
         edgeCount++;
       }
     }
     
-    draw(groupedGraph, false, "Grouped Crosscuting Concepts", null);
+    draw(groupedGraph, false, "Grouped Crosscuting Concepts", vertexMessages);
   }
   
   public void draw(DelegateForestColor<String, String> f, boolean paintClassification, String frameName, Map<String, String> vertexMessages){

@@ -1,4 +1,4 @@
 - Mejorar agrupamientos
 - Elegir una vez el dict nomas
 - Borrar tablas (al menos la ultima) cuando se elige un proyecto nuevo o se modifica algo en las anteriores.
-- Funcionalidad 'P' en el ultimo grafico (aunque sea en los verdes, crosscutings)
+- Funcionalidad 'P' en el ultimo grafico (aunque sea en los verdes, crosscutings) [ A MEDIAS ]
