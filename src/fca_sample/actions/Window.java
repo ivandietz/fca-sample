@@ -28,6 +28,7 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -44,6 +45,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
@@ -108,15 +110,18 @@ public class Window {
   private FCAImplementation fca;
   private Table grouped_concepts;
   private boolean groupedConceptsOrderAscendant = true;
+  private Button btnGroupCrosscuttingsConcepts;
   private Table groupedDetailsTable;
   private Text groupedAttributesText;
   private Map<String, String> groupedConceptsMap;
   private Text attributesMin;
   private Text elementsMin;
+  private Map<String, String> crosscutingItems;
   
   //Elements for GraphViewer
   public JList attributesList;
   public JList elementsList;
+  private Text percentage;
 
   /**
    * Launch the application.
@@ -606,12 +611,12 @@ public class Window {
           {
             Group grpConcepts_1 = new Group(composite, SWT.NONE);
             grpConcepts_1.setText("Concepts");
-            grpConcepts_1.setBounds(10, 37, 332, 420);
+            grpConcepts_1.setBounds(10, 72, 332, 385);
             {
               grouped_concepts = new Table(grpConcepts_1, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION);
               grouped_concepts.setLinesVisible(true);
               grouped_concepts.setHeaderVisible(true);
-              grouped_concepts.setBounds(10, 21, 316, 389);
+              grouped_concepts.setBounds(10, 19, 316, 356);
               {
                 TableColumn tableColumn = new TableColumn(grouped_concepts, SWT.NONE);
                 tableColumn.setResizable(false);
@@ -715,20 +720,17 @@ public class Window {
             groupButton.addSelectionListener(new SelectionAdapter() {
               @Override
               public void widgetSelected(SelectionEvent e) {
-                
                 DirectoryDialog directoryDialog = new DirectoryDialog(shlFcaSample);
-                
-//                directoryDialog.setFilterPath(selectedDir);
                 directoryDialog.setMessage("Please select WordNet DICTIONARY folder (\"dict\").");
                 String dir = directoryDialog.open();
                 if (dir != null) {
-                System.setProperty("wordnet.database.dir", dir);
-                groupCrosscuttingMethods();
+                  System.setProperty("wordnet.database.dir", dir);
+                  btnGroupCrosscuttingsConcepts.setEnabled(true);
                 }
               }
             });
             groupButton.setBounds(10, 10, 332, 25);
-            groupButton.setText("Group Crosscutting Concepts (requires WordNet)");
+            groupButton.setText("Select Wordnet Database Directory");
           }
           {
             Button button = new Button(composite, SWT.NONE);
@@ -763,6 +765,41 @@ public class Window {
             });
             button.setBounds(10, 463, 84, 25);
             button.setText("Choose Color");
+          }
+          {
+            btnGroupCrosscuttingsConcepts = new Button(composite, SWT.NONE);
+            btnGroupCrosscuttingsConcepts.addSelectionListener(new SelectionAdapter() {
+              @Override
+              public void widgetSelected(SelectionEvent e) {
+                try {
+                  if (Float.valueOf(percentage.getText()) > 0 && Float.valueOf(percentage.getText()) <= 100)
+                    groupCrosscuttingMethods();
+                  else {
+                    MessageBox box = new MessageBox(shlFcaSample, SWT.ICON_ERROR);
+                    box.setMessage("Please enter a percentage value between 1 and 100.");
+                    box.open();
+                  }
+                }
+                catch (Exception ex) {
+                  MessageBox box = new MessageBox(shlFcaSample, SWT.ICON_ERROR);
+                  box.setMessage("Please enter a valid percentage value.");
+                  box.open();
+                }
+              }
+            });
+            btnGroupCrosscuttingsConcepts.setBounds(10, 41, 189, 25);
+            btnGroupCrosscuttingsConcepts.setText("Group Crosscuttings Concepts");
+            btnGroupCrosscuttingsConcepts.setEnabled(false);
+          }
+          {
+            percentage = new Text(composite, SWT.BORDER);
+            percentage.setText("100");
+            percentage.setBounds(205, 43, 30, 21);
+          }
+          {
+            Label lblMatching = new Label(composite, SWT.NONE);
+            lblMatching.setBounds(241, 46, 101, 15);
+            lblMatching.setText("% matching");
           }
         }
       }
@@ -917,13 +954,13 @@ public class Window {
    * Agrupa conceptos semanticamente relacionados (sinonimos, antonimos..)
    */
   void groupCrosscuttingMethods(){
-    Map<String, String> items = getCrosscuttingItems();
+    crosscutingItems = getCrosscuttingItems();
     
     // Filtramos elementos incluidos en otro concepto
-    filterItems(items);
+    filterItems(crosscutingItems);
     
     // Agrupamos los conceptos semanticamente relacionados
-    Map<String, String> groupedConcepts = groupConcepts(items);
+    Map<String, String> groupedConcepts = groupConcepts(crosscutingItems);
     
     // Clear tables
     grouped_concepts.removeAll();
@@ -1016,19 +1053,19 @@ public class Window {
         String newKey = attributesArray[i];
         String newValue = items.get(attributesArray[i]);
         String children = attributesArray[i];
-        boolean group = false;
+        boolean grouped = false;
         for (int j = i + 1; j < attributesArray.length; j++) {
-          if (isRelated(attributesArray[i], attributesArray[j])){
+          if (groupRelated(children, attributesArray[j])){
             newKey = newKey + ", " + attributesArray[j];
             newValue = newValue + ", " + items.get(attributesArray[j]);
             children = children + ":" + attributesArray[j];
-            group = true;
+            grouped = true;
             // "sacar" de la lista el concepto que ya agregamos y pasar al siguiente
             attributesArray[j] = "";
           }
         }
         returnMap.put(eliminateDuplicates(newKey), newValue);
-        if(group)
+        if(grouped)
           groupedConceptsMap.put(eliminateDuplicates(newKey), children);
       }
     }
@@ -1077,10 +1114,21 @@ public class Window {
           }
         }
       }
-      if (matchCount == a.length) 
+      if (matchCount >= a.length * (Float.valueOf(percentage.getText()) / 100)) 
         return true;
     }
     return false;
+  }
+  
+  public boolean groupRelated(String group, String concept){
+    String[] concepts = group.split(":");
+    boolean related = true;
+    for (int i = 0; i < concepts.length && related; i++) {
+      if(!isRelated(concepts[i],concept)) {
+        related = false;
+      }      
+    }
+    return related;
   }
   
   public void drawGraph(boolean paintClassification, String frameName){
@@ -1124,11 +1172,8 @@ public class Window {
         edgeCount++;
         String[] childs = groupedConceptsMap.get(items[i].getText(0)).split(":");
         for (int j = 0; j < childs.length; j++) {
-          groupedGraph.addVertex("[" + childs[j] + "]", Color.GREEN);
-          
-          //TODO seguir aca...
-          
-//          vertexMessages.put("[" + childs[j] + "]", "[" +  + "]");
+          groupedGraph.addVertex("[" + childs[j] + "]", Color.GREEN);                    
+          vertexMessages.put("[" + childs[j] + "]", "[" + crosscutingItems.get(childs[j]) + "]");
           groupedGraph.addEdge(String.valueOf(edgeCount), "[" + items[i].getText(0) + "]", "[" + childs[j] + "]");
           edgeCount++; 
         }
