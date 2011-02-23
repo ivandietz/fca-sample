@@ -2,3 +2,5 @@
 - Elegir una vez el dict nomas
 - Borrar tablas (al menos la ultima) cuando se elige un proyecto nuevo o se modifica algo en las anteriores.
 - Funcionalidad 'P' en el ultimo grafico (aunque sea en los verdes, crosscutings) [ A MEDIAS ]
+- Ver si esta bien el tema de que los minimos de atr y elem no apliquen a la primer ventana de lattice (capaz se pueden mover a la segunda pestaña antes de confirmar, para q se entienda mejor)
+- Poner botones de "Select All" y "Remove All" en las tablas
