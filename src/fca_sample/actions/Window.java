@@ -28,7 +28,6 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -105,6 +104,7 @@ public class Window {
   private boolean classifiedConceptsTableOrderAscendant = true;
   private Table classifiedDetailsTable;
   private Text classifiedAttributeText;
+  private Label classificationNumber;
   private Combo criteriaCombo;
   private List<ClassifiedTableItem> classifiedItems = new ArrayList<ClassifiedTableItem>();
   private FCAImplementation fca;
@@ -112,8 +112,9 @@ public class Window {
   private boolean groupedConceptsOrderAscendant = true;
   private Button btnGroupCrosscuttingsConcepts;
   private Table groupedDetailsTable;
-  private Text groupedAttributesText;
+  private Text groupedAttributesText;  
   private Map<String, String> groupedConceptsMap;
+  private Label groupedNumber;
   private Text attributesMin;
   private Text elementsMin;
   private Map<String, String> crosscutingItems;
@@ -304,6 +305,7 @@ public class Window {
                 classifiedAttributeText.setText("");
                 criteriaCombo.clearSelection();
                 tabFolder.setSelection(2);
+                classificationNumber.setText("Total concepts: ");
               }
             });
             btnConfirm.setBounds(10, 463, 103, 25);
@@ -599,6 +601,11 @@ public class Window {
             btnChooseColor.setBounds(10, 463, 84, 25);
             btnChooseColor.setText("Choose Color");
           }
+          {
+            classificationNumber = new Label(composite, SWT.NONE);
+            classificationNumber.setBounds(205, 468, 167, 15);
+            classificationNumber.setText("Total concepts: ");
+          }
 
         }
       }
@@ -801,6 +808,11 @@ public class Window {
             lblMatching.setBounds(241, 46, 101, 15);
             lblMatching.setText("% matching");
           }
+          {
+            groupedNumber = new Label(composite, SWT.NONE);
+            groupedNumber.setBounds(205, 468, 167, 15);
+            groupedNumber.setText("Total concepts: ");
+          }
         }
       }
     }
@@ -895,7 +907,8 @@ public class Window {
         item.setText(1, (classifiedItem.getItem().getText(1)));
         item.setBackground(2, new org.eclipse.swt.graphics.Color(Display.getCurrent(), 0, 255, 0));
       }
-    }
+    }    
+    classificationNumber.setText("Total concepts: " + String.valueOf(classifiedConceptsTable.getItemCount()));
     shlFcaSample.update();
   }
   
@@ -981,7 +994,7 @@ public class Window {
         item.setBackground(2, new org.eclipse.swt.graphics.Color(Display.getCurrent(), 0, 255, 0));
       }
     }
-    
+    groupedNumber.setText("Total concepts: " + String.valueOf(grouped_concepts.getItemCount()));
   }
   
   /**
@@ -1101,7 +1114,7 @@ public class Window {
   public boolean isRelated(String attributesA, String attributesB) {
     String[] a = attributesA.split(", ");
     String[] b = attributesB.split(", ");
-    if (a.length == b.length) {
+//    if (a.length == b.length) {
       int matchCount = 0;
       for (int i = 0; i < a.length; i++) {
         boolean matched = false;
@@ -1114,9 +1127,10 @@ public class Window {
           }
         }
       }
-      if (matchCount >= a.length * (Float.valueOf(percentage.getText()) / 100)) 
+//      if (matchCount >= a.length * (Float.valueOf(percentage.getText()) / 100))
+      if(matchCount * 2 >= (a.length + b.length)* (Float.valueOf(percentage.getText()) / 100))
         return true;
-    }
+//    }
     return false;
   }
   
