@@ -304,6 +304,8 @@ public class Window {
                 classifiedDetailsTable.removeAll();
                 classifiedAttributeText.setText("");
                 criteriaCombo.clearSelection();
+                grouped_concepts.removeAll();
+                groupedDetailsTable.removeAll();
                 tabFolder.setSelection(2);
                 classificationNumber.setText("Total concepts: ");
               }
@@ -842,6 +844,8 @@ public class Window {
     classifiedAttributeText.setText("");
     criteriaCombo.clearSelection();
     classifiedItems.clear();
+    grouped_concepts.removeAll();
+    groupedDetailsTable.removeAll();
     
     // Fill results table
     TableItem item = null;
