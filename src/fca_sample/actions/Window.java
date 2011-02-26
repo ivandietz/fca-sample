@@ -210,7 +210,7 @@ public class Window {
                 }
               }
             });
-            btnRunFcaAlgorithm.setBounds(10, 140, 316, 23);
+            btnRunFcaAlgorithm.setBounds(10, 140, 244, 23);
             btnRunFcaAlgorithm.setText("Run FCA Algorithm");
           }
           {
@@ -244,7 +244,7 @@ public class Window {
           {
             lblRunning = new Label(composite, SWT.NONE);
             lblRunning.setFont(SWTResourceManager.getFont("Tahoma", 8, SWT.BOLD));
-            lblRunning.setBounds(218, 259, 66, 13);
+            lblRunning.setBounds(260, 145, 66, 13);
           }
           {
             {
