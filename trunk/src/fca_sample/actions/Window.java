@@ -77,6 +77,7 @@ import fca_sample.Criteria;
 import fca_sample.FCAImplementation;
 import fca_sample.TreeUtils;
 import fca_sample.WordNetUtils;
+import org.eclipse.swt.widgets.Link;
 
 /**
  * 
@@ -319,7 +320,7 @@ public class Window {
             grpLatticeConcepts.setBounds(10, 10, 332, 447);
             {
               resultsTable = new Table(grpLatticeConcepts, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION);
-              resultsTable.setBounds(10, 21, 316, 416);
+              resultsTable.setBounds(10, 21, 316, 395);
               resultsTable.setLinesVisible(true);
               resultsTable.setHeaderVisible(true);
               {
@@ -358,6 +359,16 @@ public class Window {
                 TableColumn tblclmnElements_1 = new TableColumn(resultsTable, SWT.NONE);
                 tblclmnElements_1.setResizable(false);
                 tblclmnElements_1.setText("Elements");
+              }
+              {
+                Link link = new Link(grpLatticeConcepts, SWT.NONE);
+                link.setBounds(10, 422, 49, 15);
+                link.setText("<a>Select All</a>");
+              }
+              {
+                Link link = new Link(grpLatticeConcepts, SWT.NONE);
+                link.setBounds(65, 422, 67, 15);
+                link.setText("<a>Unselect All</a>");
               }
               resultsTable.addSelectionListener(new SelectionListener() {
                 @Override
@@ -465,7 +476,7 @@ public class Window {
               classifiedConceptsTable = new Table(grpConcepts, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION);
               classifiedConceptsTable.setLinesVisible(true);
               classifiedConceptsTable.setHeaderVisible(true);
-              classifiedConceptsTable.setBounds(10, 21, 316, 389);
+              classifiedConceptsTable.setBounds(10, 21, 316, 370);
               {
                 TableColumn tblclmnAttributes = new TableColumn(classifiedConceptsTable, SWT.NONE);
                 tblclmnAttributes.setResizable(false);
@@ -509,6 +520,16 @@ public class Window {
                 TableColumn tblclmnColor = new TableColumn(classifiedConceptsTable, SWT.NONE);
                 tblclmnColor.setResizable(false);
                 tblclmnColor.setWidth(32);
+              }
+              {
+                Link link = new Link(grpConcepts, 0);
+                link.setBounds(65, 397, 67, 15);
+                link.setText("<a>Unselect All</a>");
+              }
+              {
+                Link link = new Link(grpConcepts, 0);
+                link.setBounds(10, 397, 49, 15);
+                link.setText("<a>Select All</a>");
               }
               classifiedConceptsTable.addSelectionListener(new SelectionListener() {
                 @Override
@@ -625,7 +646,7 @@ public class Window {
               grouped_concepts = new Table(grpConcepts_1, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION);
               grouped_concepts.setLinesVisible(true);
               grouped_concepts.setHeaderVisible(true);
-              grouped_concepts.setBounds(10, 19, 316, 356);
+              grouped_concepts.setBounds(10, 19, 316, 334);
               {
                 TableColumn tableColumn = new TableColumn(grouped_concepts, SWT.NONE);
                 tableColumn.setResizable(false);
@@ -669,6 +690,16 @@ public class Window {
                 TableColumn tableColumn = new TableColumn(grouped_concepts, SWT.NONE);
                 tableColumn.setResizable(false);
                 tableColumn.setWidth(32);
+              }
+              {
+                Link link = new Link(grpConcepts_1, 0);
+                link.setBounds(65, 360, 67, 15);
+                link.setText("<a>Unselect All</a>");
+              }
+              {
+                Link link = new Link(grpConcepts_1, 0);
+                link.setBounds(10, 360, 49, 15);
+                link.setText("<a>Select All</a>");
               }
               grouped_concepts.addSelectionListener(new SelectionListener() {
                 @Override
