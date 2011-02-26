@@ -109,21 +109,21 @@ public class Window {
   private Combo criteriaCombo;
   private List<ClassifiedTableItem> classifiedItems = new ArrayList<ClassifiedTableItem>();
   private FCAImplementation fca;
-  private Table grouped_concepts;
+  private Table groupedConceptsTable;
   private boolean groupedConceptsOrderAscendant = true;
   private Button btnGroupCrosscuttingsConcepts;
   private Table groupedDetailsTable;
   private Text groupedAttributesText;  
   private Map<String, String> groupedConceptsMap;
   private Label groupedNumber;
-  private Text attributesMin;
-  private Text elementsMin;
   private Map<String, String> crosscutingItems;
   
   //Elements for GraphViewer
   public JList attributesList;
   public JList elementsList;
   private Text percentage;
+  private Text elementsMin;
+  private Text attributesMin;
 
   /**
    * Launch the application.
@@ -210,7 +210,7 @@ public class Window {
                 }
               }
             });
-            btnRunFcaAlgorithm.setBounds(10, 254, 202, 23);
+            btnRunFcaAlgorithm.setBounds(10, 140, 316, 23);
             btnRunFcaAlgorithm.setText("Run FCA Algorithm");
           }
           {
@@ -247,43 +247,25 @@ public class Window {
             lblRunning.setBounds(218, 259, 66, 13);
           }
           {
-            tree = new Tree(composite, SWT.CHECK);
-            tree.setBounds(332, 42, 642, 450);
             {
-              Group grpCrosscutingMethods = new Group(composite, SWT.NONE);
-              grpCrosscutingMethods.setText("Classification");
-              grpCrosscutingMethods.setBounds(10, 140, 316, 108);
-              {
-                Label lblMininumNumberOf = new Label(grpCrosscutingMethods, SWT.NONE);
-                lblMininumNumberOf.setBounds(10, 42, 239, 15);
-                lblMininumNumberOf.setText("Mininum number of elements per concept");
-              }
-              {
-                elementsMin = new Text(grpCrosscutingMethods, SWT.BORDER);
-                elementsMin.setText("0");
-                elementsMin.setBounds(255, 39, 32, 21);
-              }
-              {
-                Label lblMininumNumberOf_1 = new Label(grpCrosscutingMethods, SWT.NONE);
-                lblMininumNumberOf_1.setBounds(10, 21, 239, 15);
-                lblMininumNumberOf_1.setText("Mininum number of attributes per concept");
-              }
-              {
-                attributesMin = new Text(grpCrosscutingMethods, SWT.BORDER);
-                attributesMin.setText("0");
-                attributesMin.setBounds(255, 18, 32, 21);
-              }
-            }
-            tree.addListener(SWT.Selection, new Listener() {
-              public void handleEvent(Event event) {
-                  if (event.detail == SWT.CHECK) {
-                      TreeItem item = (TreeItem) event.item;
-                      boolean checked = item.getChecked();
-                      TreeUtils.checkItems(item, checked);
-                      TreeUtils.checkPath(item.getParentItem(), checked, false);
-                  }
-              }
+              Group grpProjectTree = new Group(composite, SWT.NONE);
+              grpProjectTree.setText("Project tree");
+              grpProjectTree.setBackground(SWTResourceManager.getColor(SWT.COLOR_INFO_BACKGROUND));
+              grpProjectTree.setBounds(332, 23, 642, 469);
+              tree = new Tree(grpProjectTree, SWT.CHECK);
+              tree.setBackground(SWTResourceManager.getColor(SWT.COLOR_INFO_BACKGROUND));
+              tree.setBounds(10, 21, 622, 438);
+              tree.addListener(SWT.Selection, new Listener() {
+                public void handleEvent(Event event) {
+                    if (event.detail == SWT.CHECK) {
+                        TreeItem item = (TreeItem) event.item;
+                        boolean checked = item.getChecked();
+                        TreeUtils.checkItems(item, checked);
+                        TreeUtils.checkPath(item.getParentItem(), checked, false);
+                    }
+                }
           });
+            }
             packagesMap = new HashMap<String, TreeItem>();
           }
         }
@@ -305,7 +287,7 @@ public class Window {
                 classifiedDetailsTable.removeAll();
                 classifiedAttributeText.setText("");
                 criteriaCombo.clearSelection();
-                grouped_concepts.removeAll();
+                groupedConceptsTable.removeAll();
                 groupedDetailsTable.removeAll();
                 tabFolder.setSelection(2);
                 classificationNumber.setText("Total concepts: ");
@@ -317,10 +299,10 @@ public class Window {
           {
             Group grpLatticeConcepts = new Group(composite, SWT.NONE);
             grpLatticeConcepts.setText("Lattice Concepts");
-            grpLatticeConcepts.setBounds(10, 10, 332, 447);
+            grpLatticeConcepts.setBounds(10, 10, 332, 361);
             {
               resultsTable = new Table(grpLatticeConcepts, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION);
-              resultsTable.setBounds(10, 21, 316, 395);
+              resultsTable.setBounds(10, 21, 316, 309);
               resultsTable.setLinesVisible(true);
               resultsTable.setHeaderVisible(true);
               {
@@ -361,14 +343,32 @@ public class Window {
                 tblclmnElements_1.setText("Elements");
               }
               {
-                Link link = new Link(grpLatticeConcepts, SWT.NONE);
-                link.setBounds(10, 422, 49, 15);
-                link.setText("<a>Select All</a>");
+                Link selectAll1 = new Link(grpLatticeConcepts, SWT.NONE);
+                selectAll1.addSelectionListener(new SelectionAdapter() {
+                  @Override
+                  public void widgetSelected(SelectionEvent e) {
+                    TableItem[] items = resultsTable.getItems();
+                    for (int i = 0; i < items.length; i++) {
+                      items[i].setChecked(true);
+                    }
+                  }
+                });
+                selectAll1.setBounds(10, 336, 49, 15);
+                selectAll1.setText("<a>Select All</a>");
               }
               {
-                Link link = new Link(grpLatticeConcepts, SWT.NONE);
-                link.setBounds(65, 422, 67, 15);
-                link.setText("<a>Unselect All</a>");
+                Link unselectAll1 = new Link(grpLatticeConcepts, SWT.NONE);
+                unselectAll1.addSelectionListener(new SelectionAdapter() {
+                  @Override
+                  public void widgetSelected(SelectionEvent e) {
+                    TableItem[] items = resultsTable.getItems();
+                    for (int i = 0; i < items.length; i++) {
+                      items[i].setChecked(false);
+                    }
+                  }
+                });
+                unselectAll1.setBounds(65, 336, 67, 15);
+                unselectAll1.setText("<a>Unselect All</a>");
               }
               resultsTable.addSelectionListener(new SelectionListener() {
                 @Override
@@ -440,6 +440,31 @@ public class Window {
             conceptsNumber.setText("Total concepts: ");
             conceptsNumber.setBounds(200, 468, 167, 15);
           }
+          {
+            Group group = new Group(composite, SWT.NONE);
+            group.setBounds(10, 377, 332, 80);
+            group.setText("Classification");
+            {
+              Label label = new Label(group, SWT.NONE);
+              label.setText("Mininum number of elements per concept");
+              label.setBounds(10, 44, 239, 15);
+            }
+            {
+              elementsMin = new Text(group, SWT.BORDER);
+              elementsMin.setText("0");
+              elementsMin.setBounds(255, 41, 32, 21);
+            }
+            {
+              Label label = new Label(group, SWT.NONE);
+              label.setText("Mininum number of attributes per concept");
+              label.setBounds(10, 23, 239, 15);
+            }
+            {
+              attributesMin = new Text(group, SWT.BORDER);
+              attributesMin.setText("0");
+              attributesMin.setBounds(255, 20, 32, 21);
+            }
+          }
         }
       }
       {
@@ -476,7 +501,7 @@ public class Window {
               classifiedConceptsTable = new Table(grpConcepts, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION);
               classifiedConceptsTable.setLinesVisible(true);
               classifiedConceptsTable.setHeaderVisible(true);
-              classifiedConceptsTable.setBounds(10, 21, 316, 370);
+              classifiedConceptsTable.setBounds(10, 21, 316, 368);
               {
                 TableColumn tblclmnAttributes = new TableColumn(classifiedConceptsTable, SWT.NONE);
                 tblclmnAttributes.setResizable(false);
@@ -522,14 +547,32 @@ public class Window {
                 tblclmnColor.setWidth(32);
               }
               {
-                Link link = new Link(grpConcepts, 0);
-                link.setBounds(65, 397, 67, 15);
-                link.setText("<a>Unselect All</a>");
+                Link selectAll2 = new Link(grpConcepts, 0);
+                selectAll2.addSelectionListener(new SelectionAdapter() {
+                  @Override
+                  public void widgetSelected(SelectionEvent e) {
+                    TableItem[] items = classifiedConceptsTable.getItems();
+                    for (int i = 0; i < items.length; i++) {
+                      items[i].setChecked(true);
+                    }
+                  }
+                });
+                selectAll2.setBounds(10, 395, 49, 15);
+                selectAll2.setText("<a>Select All</a>");
               }
               {
-                Link link = new Link(grpConcepts, 0);
-                link.setBounds(10, 397, 49, 15);
-                link.setText("<a>Select All</a>");
+                Link unselectAll2 = new Link(grpConcepts, 0);
+                unselectAll2.addSelectionListener(new SelectionAdapter() {
+                  @Override
+                  public void widgetSelected(SelectionEvent e) {
+                    TableItem[] items = classifiedConceptsTable.getItems();
+                    for (int i = 0; i < items.length; i++) {
+                      items[i].setChecked(false);
+                    }
+                  }
+                });
+                unselectAll2.setBounds(65, 395, 67, 15);
+                unselectAll2.setText("<a>Unselect All</a>");
               }
               classifiedConceptsTable.addSelectionListener(new SelectionListener() {
                 @Override
@@ -643,19 +686,19 @@ public class Window {
             grpConcepts_1.setText("Concepts");
             grpConcepts_1.setBounds(10, 72, 332, 385);
             {
-              grouped_concepts = new Table(grpConcepts_1, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION);
-              grouped_concepts.setLinesVisible(true);
-              grouped_concepts.setHeaderVisible(true);
-              grouped_concepts.setBounds(10, 19, 316, 334);
+              groupedConceptsTable = new Table(grpConcepts_1, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION);
+              groupedConceptsTable.setLinesVisible(true);
+              groupedConceptsTable.setHeaderVisible(true);
+              groupedConceptsTable.setBounds(10, 19, 316, 335);
               {
-                TableColumn tableColumn = new TableColumn(grouped_concepts, SWT.NONE);
+                TableColumn tableColumn = new TableColumn(groupedConceptsTable, SWT.NONE);
                 tableColumn.setResizable(false);
                 tableColumn.setWidth(280);
                 tableColumn.setText("Attributes");
                 tableColumn.addListener(SWT.Selection, new Listener() {
                   public void handleEvent(Event e) {
                     // sort column 1
-                    TableItem[] items = grouped_concepts.getItems();
+                    TableItem[] items = groupedConceptsTable.getItems();
                     Collator collator = Collator.getInstance(Locale.getDefault());
                     for (int i = 1; i < items.length; i++) {
                       String value1 = items[i].getText(0);
@@ -668,11 +711,11 @@ public class Window {
                           boolean wasChecked = items[i].getChecked();
                           org.eclipse.swt.graphics.Color color = items[i].getBackground(2);
                           items[i].dispose();
-                          TableItem item = new TableItem(grouped_concepts, SWT.NONE, j);
+                          TableItem item = new TableItem(groupedConceptsTable, SWT.NONE, j);
                           item.setText(values);
                           item.setChecked(wasChecked);
                           item.setBackground(2, color);
-                          items = grouped_concepts.getItems();
+                          items = groupedConceptsTable.getItems();
                           break;
                         }
                       }
@@ -682,37 +725,55 @@ public class Window {
                 });
               }
               {
-                TableColumn tableColumn = new TableColumn(grouped_concepts, SWT.NONE);
+                TableColumn tableColumn = new TableColumn(groupedConceptsTable, SWT.NONE);
                 tableColumn.setResizable(false);
                 tableColumn.setText("Elements");
               }
               {
-                TableColumn tableColumn = new TableColumn(grouped_concepts, SWT.NONE);
+                TableColumn tableColumn = new TableColumn(groupedConceptsTable, SWT.NONE);
                 tableColumn.setResizable(false);
                 tableColumn.setWidth(32);
               }
               {
-                Link link = new Link(grpConcepts_1, 0);
-                link.setBounds(65, 360, 67, 15);
-                link.setText("<a>Unselect All</a>");
+                Link selectAll3 = new Link(grpConcepts_1, 0);
+                selectAll3.addSelectionListener(new SelectionAdapter() {
+                  @Override
+                  public void widgetSelected(SelectionEvent e) {
+                    TableItem[] items = groupedConceptsTable.getItems();
+                    for (int i = 0; i < items.length; i++) {
+                      items[i].setChecked(true);
+                    }
+                  }
+                });
+                selectAll3.setBounds(10, 360, 49, 15);
+                selectAll3.setText("<a>Select All</a>");
               }
               {
-                Link link = new Link(grpConcepts_1, 0);
-                link.setBounds(10, 360, 49, 15);
-                link.setText("<a>Select All</a>");
+                Link unselectAll3 = new Link(grpConcepts_1, 0);
+                unselectAll3.addSelectionListener(new SelectionAdapter() {
+                  @Override
+                  public void widgetSelected(SelectionEvent e) {
+                    TableItem[] items = groupedConceptsTable.getItems();
+                    for (int i = 0; i < items.length; i++) {
+                      items[i].setChecked(false);
+                    }
+                  }
+                });
+                unselectAll3.setBounds(65, 360, 67, 15);
+                unselectAll3.setText("<a>Unselect All</a>");
               }
-              grouped_concepts.addSelectionListener(new SelectionListener() {
+              groupedConceptsTable.addSelectionListener(new SelectionListener() {
                 @Override
                 public void widgetDefaultSelected(SelectionEvent e) {
-                  groupedAttributesText.setText(grouped_concepts.getSelection()[0].getText(0));
-                  updateDetails(groupedDetailsTable, grouped_concepts.getSelection()[0]);
+                  groupedAttributesText.setText(groupedConceptsTable.getSelection()[0].getText(0));
+                  updateDetails(groupedDetailsTable, groupedConceptsTable.getSelection()[0]);
                 }
 
                 @Override
                 public void widgetSelected(SelectionEvent e) {
-                  if (grouped_concepts.getSelection().length != 0) {
-                    groupedAttributesText.setText(grouped_concepts.getSelection()[0].getText(0));
-                    updateDetails(groupedDetailsTable, grouped_concepts.getSelection()[0]);
+                  if (groupedConceptsTable.getSelection().length != 0) {
+                    groupedAttributesText.setText(groupedConceptsTable.getSelection()[0].getText(0));
+                    updateDetails(groupedDetailsTable, groupedConceptsTable.getSelection()[0]);
                   }
                 }
               });
@@ -795,7 +856,7 @@ public class Window {
                 if (newColor == null) {
                   return;
                 }
-                TableItem[] items = grouped_concepts.getItems(); 
+                TableItem[] items = groupedConceptsTable.getItems(); 
                 for (int i = 0; i < items.length; i++) {
                   if (items[i].getChecked()) {
                     items[i].setBackground(2, new org.eclipse.swt.graphics.Color(Display.getCurrent(), newColor.red, newColor.green, newColor.blue));
@@ -875,7 +936,7 @@ public class Window {
     classifiedAttributeText.setText("");
     criteriaCombo.clearSelection();
     classifiedItems.clear();
-    grouped_concepts.removeAll();
+    groupedConceptsTable.removeAll();
     groupedDetailsTable.removeAll();
     
     // Fill results table
@@ -1011,7 +1072,7 @@ public class Window {
     Map<String, String> groupedConcepts = groupConcepts(crosscutingItems);
     
     // Clear tables
-    grouped_concepts.removeAll();
+    groupedConceptsTable.removeAll();
     groupedDetailsTable.removeAll();
     groupedAttributesText.setText("");
     
@@ -1020,7 +1081,7 @@ public class Window {
     TableItem item = null;
     for (Iterator iterator = keySet.iterator(); iterator.hasNext();) {
       String key = (String) iterator.next();
-      item = new TableItem(grouped_concepts, SWT.NONE);
+      item = new TableItem(groupedConceptsTable, SWT.NONE);
       item.setText(0, key);
       item.setText(1, groupedConcepts.get(key));
       if(groupedConceptsMap.containsKey(item.getText(0))){
@@ -1029,7 +1090,7 @@ public class Window {
         item.setBackground(2, new org.eclipse.swt.graphics.Color(Display.getCurrent(), 0, 255, 0));
       }
     }
-    groupedNumber.setText("Total concepts: " + String.valueOf(grouped_concepts.getItemCount()));
+    groupedNumber.setText("Total concepts: " + String.valueOf(groupedConceptsTable.getItemCount()));
   }
   
   /**
@@ -1210,7 +1271,7 @@ public class Window {
   public void drawGroupedGraph(){
     DelegateForestColor<String, String> groupedGraph = new DelegateForestColor<String, String>();
     groupedGraph.addVertex("[]", new Color(255, 255, 140));
-    TableItem[] items = grouped_concepts.getItems(); 
+    TableItem[] items = groupedConceptsTable.getItems(); 
     Map<String, String> vertexMessages = new HashMap<String, String>();
     int edgeCount = 0;
     for (int i = 0; i < items.length; i++) {
