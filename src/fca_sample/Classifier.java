@@ -112,11 +112,11 @@ public class Classifier {
     for (int i = 0; i < elements.length; i++) {
       String components[] = elements[i].split(":");
       if (components.length == 2) {
-        if (!classNames.contains(components[0])) {
+//        if (!classNames.contains(components[0])) {
           classNames.add(components[0]);
           methodHierarchy.put(elements[i], getHierarchy(components[0], hierarchy));
-        } else
-          return false; // methods must be from different classes
+//        } else
+//          return false; // methods must be from different classes
       } else
         return false; // we only want methods
     }
@@ -126,19 +126,31 @@ public class Classifier {
     Iterator<String> i = methodHierarchy.keySet().iterator();
     String element = i.next();
     List<String> elementParents = (List<String>) methodHierarchy.get(element);
-    boolean notShareParents = true;
-    while (i.hasNext() && notShareParents) {
-      notShareParents = false;
+    
+    while (i.hasNext()) {
       String nextElement = i.next();
       List<String> parents = (List<String>) methodHierarchy.get(nextElement);
-      for (Iterator iterator = parents.iterator(); iterator.hasNext() && !notShareParents;) {
+      for (Iterator iterator = parents.iterator(); iterator.hasNext();) {
         String superclass = (String) iterator.next();
         if (!elementParents.contains(superclass)) {
-          notShareParents = true;
+          return true;
         }
       }
     }
-    return notShareParents;
+    return false;
+//    boolean notShareParents = true;
+//    while (i.hasNext() && notShareParents) {
+//      notShareParents = false;
+//      String nextElement = i.next();
+//      List<String> parents = (List<String>) methodHierarchy.get(nextElement);
+//      for (Iterator iterator = parents.iterator(); iterator.hasNext() && !notShareParents;) {
+//        String superclass = (String) iterator.next();
+//        if (!elementParents.contains(superclass)) {
+//          notShareParents = true;
+//        }
+//      }
+//    }
+//    return notShareParents;
   }
   
   

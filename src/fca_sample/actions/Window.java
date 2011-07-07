@@ -100,11 +100,13 @@ public class Window {
   private boolean resultsTableOrderAscendant = true;
   private Table detailsTable;
   private Text attributesText;
+  private Label elements1;
   private Label conceptsNumber;
   private Table classifiedConceptsTable;
   private boolean classifiedConceptsTableOrderAscendant = true;
   private Table classifiedDetailsTable;
   private Text classifiedAttributeText;
+  private Label elements2;
   private Label classificationNumber;
   private Combo criteriaCombo;
   private List<ClassifiedTableItem> classifiedItems = new ArrayList<ClassifiedTableItem>();
@@ -114,6 +116,7 @@ public class Window {
   private Button btnGroupCrosscuttingsConcepts;
   private Table groupedDetailsTable;
   private Text groupedAttributesText;  
+  private Label elements3;
   private Map<String, String> groupedConceptsMap;
   private Label groupedNumber;
   private Map<String, String> crosscutingItems;
@@ -375,6 +378,7 @@ public class Window {
                 public void widgetDefaultSelected(SelectionEvent e) {
                   attributesText.setText(resultsTable.getSelection()[0].getText(0));
                   updateDetails(detailsTable, resultsTable.getSelection()[0]);
+                  elements1.setText("# Elements: " + String.valueOf(detailsTable.getItems().length));
                 }
 
                 @Override
@@ -382,6 +386,7 @@ public class Window {
                   if (resultsTable.getSelection().length != 0) {
                     attributesText.setText(resultsTable.getSelection()[0].getText(0));
                     updateDetails(detailsTable, resultsTable.getSelection()[0]);
+                    elements1.setText("# Elements: " + String.valueOf(detailsTable.getItems().length));
                   }
                 }
               });
@@ -416,12 +421,17 @@ public class Window {
               attributesText = new Text(grpConceptDetails, SWT.BORDER);
               attributesText.setEditable(false);
               attributesText.setEnabled(false);
-              attributesText.setBounds(74, 21, 542, 19);
+              attributesText.setBounds(74, 21, 400, 19);
             }
             {
               Label lblAttributes = new Label(grpConceptDetails, SWT.NONE);
-              lblAttributes.setBounds(10, 27, 59, 13);
+              lblAttributes.setBounds(10, 24, 59, 13);
               lblAttributes.setText("Attributes:");
+            }
+            {
+              elements1 = new Label(grpConceptDetails, SWT.NONE);
+              elements1.setBounds(480, 24, 136, 15);
+              elements1.setText("# Elements: ");
             }
           }
           {
@@ -579,6 +589,7 @@ public class Window {
                 public void widgetDefaultSelected(SelectionEvent e) {
                   classifiedAttributeText.setText(classifiedConceptsTable.getSelection()[0].getText(0));
                   updateDetails(classifiedDetailsTable, classifiedConceptsTable.getSelection()[0]);
+                  elements2.setText("# Elements: " + String.valueOf(classifiedDetailsTable.getItems().length));
                 }
 
                 @Override
@@ -586,6 +597,7 @@ public class Window {
                   if (classifiedConceptsTable.getSelection().length != 0) {
                     classifiedAttributeText.setText(classifiedConceptsTable.getSelection()[0].getText(0));
                     updateDetails(classifiedDetailsTable, classifiedConceptsTable.getSelection()[0]);
+                    elements2.setText("# Elements: " + String.valueOf(classifiedDetailsTable.getItems().length));
                   }
                 }
               });
@@ -620,12 +632,17 @@ public class Window {
               classifiedAttributeText = new Text(grpConceptDetailselements_1, SWT.BORDER);
               classifiedAttributeText.setEnabled(false);
               classifiedAttributeText.setEditable(false);
-              classifiedAttributeText.setBounds(74, 21, 542, 19);
+              classifiedAttributeText.setBounds(74, 21, 400, 19);
             }
             {
               Label label = new Label(grpConceptDetailselements_1, SWT.NONE);
               label.setText("Attributes:");
-              label.setBounds(10, 27, 58, 13);
+              label.setBounds(10, 24, 58, 13);
+            }
+            {
+              elements2 = new Label(grpConceptDetailselements_1, SWT.NONE);
+              elements2.setBounds(480, 24, 136, 15);
+              elements2.setText("# Elements: ");
             }
           }
           {
@@ -767,6 +784,7 @@ public class Window {
                 public void widgetDefaultSelected(SelectionEvent e) {
                   groupedAttributesText.setText(groupedConceptsTable.getSelection()[0].getText(0));
                   updateDetails(groupedDetailsTable, groupedConceptsTable.getSelection()[0]);
+                  elements3.setText("# Elements: " + String.valueOf(groupedDetailsTable.getItems().length));
                 }
 
                 @Override
@@ -774,6 +792,7 @@ public class Window {
                   if (groupedConceptsTable.getSelection().length != 0) {
                     groupedAttributesText.setText(groupedConceptsTable.getSelection()[0].getText(0));
                     updateDetails(groupedDetailsTable, groupedConceptsTable.getSelection()[0]);
+                    elements3.setText("# Elements: " + String.valueOf(groupedDetailsTable.getItems().length));
                   }
                 }
               });
@@ -808,12 +827,17 @@ public class Window {
               groupedAttributesText = new Text(grpConceptDetailselements, SWT.BORDER);
               groupedAttributesText.setEnabled(false);
               groupedAttributesText.setEditable(false);
-              groupedAttributesText.setBounds(74, 21, 542, 19);
+              groupedAttributesText.setBounds(74, 21, 400, 19);
             }
             {
               Label label = new Label(grpConceptDetailselements, SWT.NONE);
               label.setText("Attributes:");
-              label.setBounds(10, 27, 542, 13);
+              label.setBounds(10, 24, 55, 13);
+            }
+            {
+              elements3 = new Label(grpConceptDetailselements, SWT.NONE);
+              elements3.setBounds(480, 24, 136, 15);
+              elements3.setText("# Elements: ");
             }
           }
           {
@@ -1213,11 +1237,11 @@ public class Window {
 //    if (a.length == b.length) {
       int matchCount = 0;
       for (int i = 0; i < a.length; i++) {
-        boolean matched = false;
-        for (int j = 0; j < b.length && !matched; j++) {
+//        boolean matched = false;
+        for (int j = 0; j < b.length /**&& !matched**/; j++) {
           if (WordNetUtils.isRelated(a[i], b[j])) {
             matchCount++;
-            matched = true;
+//            matched = true;
             a[i] = "";
             b[j] = "";
           }
