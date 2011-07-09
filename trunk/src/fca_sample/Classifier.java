@@ -11,16 +11,16 @@ import org.eclipse.swt.widgets.TableItem;
 
 public class Classifier {
 
-  public static Criteria classify(TableItem item, HashMap classHierarchy) {
-    if (classNameInKeyboard(item))
-      return Criteria.CLASS_NAME_IN_KEYBOARD;
-    if (classNameInParameter(item))
-      return Criteria.CLASS_NAME_IN_PARAMETER;
-    if (classesOnly(item))
-      return Criteria.CLASSES_ONLY;
-    if (hierarchyMethod(item, classHierarchy))
-      return Criteria.HIERARCHY_METHOD;
-    if (crosscuttingMethod(item, classHierarchy))
+  public static Criteria classify(TableItem item, HashMap classHierarchy, float percentage) {
+//    if (classNameInKeyboard(item))
+//      return Criteria.CLASS_NAME_IN_KEYBOARD;
+//    if (classNameInParameter(item))
+//      return Criteria.CLASS_NAME_IN_PARAMETER;
+//    if (classesOnly(item))
+//      return Criteria.CLASSES_ONLY;
+//    if (hierarchyMethod(item, classHierarchy))
+//      return Criteria.HIERARCHY_METHOD;
+    if (crosscuttingMethod(item, classHierarchy, percentage))
       return Criteria.CROSSCUTTING_METHOD;
     return Criteria.NONE;
   }
@@ -105,7 +105,7 @@ public class Classifier {
     return shareParents;
   }
 
-  private static boolean crosscuttingMethod(TableItem item, HashMap hierarchy) {
+  private static boolean crosscuttingMethod(TableItem item, HashMap hierarchy, float percentage) {
     HashMap methodHierarchy = new HashMap<String, List<String>>();
     Set<String> classNames = new HashSet<String>();
     String elements[] = item.getText(1).split(", ");
@@ -127,15 +127,19 @@ public class Classifier {
     String element = i.next();
     List<String> elementParents = (List<String>) methodHierarchy.get(element);
     
+    int crosscutingsFound = 0;
     while (i.hasNext()) {
       String nextElement = i.next();
       List<String> parents = (List<String>) methodHierarchy.get(nextElement);
       for (Iterator iterator = parents.iterator(); iterator.hasNext();) {
         String superclass = (String) iterator.next();
         if (!elementParents.contains(superclass)) {
-          return true;
+          crosscutingsFound++;
         }
       }
+    }
+    if (crosscutingsFound >= elements.length * percentage / 100) {
+      return true;
     }
     return false;
 //    boolean notShareParents = true;
