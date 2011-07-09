@@ -122,39 +122,64 @@ public class Classifier {
     }
     if (methodHierarchy.size() < 2)
       return false; // we want at least 2 different methods
-    // search for shared parents
-    Iterator<String> i = methodHierarchy.keySet().iterator();
-    String element = i.next();
-    List<String> elementParents = (List<String>) methodHierarchy.get(element);
     
+    // search for shared parents
+    
+    // IVAN
     int crosscutingsFound = 0;
-    while (i.hasNext()) {
-      String nextElement = i.next();
-      List<String> parents = (List<String>) methodHierarchy.get(nextElement);
-      for (Iterator iterator = parents.iterator(); iterator.hasNext();) {
-        String superclass = (String) iterator.next();
-        if (!elementParents.contains(superclass)) {
-          crosscutingsFound++;
+    int crosscutingsNotFound = 0;
+    int total = 0;
+    
+    Object methods[] = methodHierarchy.keySet().toArray();
+    for (int i = 0; i < methods.length; i++) {
+      String element = (String) methods[i];
+      List<String> elementParents = (List<String>) methodHierarchy.get(element);
+      for (int j = i+1; j < methods.length; j++) {
+        total++;
+        String nextElement = (String) methods[j];
+        List<String> nextElementParents = (List<String>) methodHierarchy.get(nextElement);
+        boolean isParent = false;
+        for (Iterator iterator = nextElementParents.iterator(); iterator.hasNext() && !isParent;) {
+          String parent = (String) iterator.next();
+          if (elementParents.contains(parent))
+            isParent = true;          
         }
+        if(!isParent)  
+          crosscutingsFound++;     
       }
     }
-    if (crosscutingsFound >= elements.length * percentage / 100) {
+    if (crosscutingsFound >= total * percentage / 100 ) {
       return true;
     }
-    return false;
-//    boolean notShareParents = true;
-//    while (i.hasNext() && notShareParents) {
-//      notShareParents = false;
-//      String nextElement = i.next();
-//      List<String> parents = (List<String>) methodHierarchy.get(nextElement);
-//      for (Iterator iterator = parents.iterator(); iterator.hasNext() && !notShareParents;) {
-//        String superclass = (String) iterator.next();
-//        if (!elementParents.contains(superclass)) {
-//          notShareParents = true;
+    
+//    // CRISTIAN
+//    int crosscutingsFound = 0;
+//
+//    Object methods[] = methodHierarchy.keySet().toArray();
+//    for (int i = 0; i < methods.length; i++) {
+//      String element = (String) methods[i];
+//      List<String> elementParents = (List<String>) methodHierarchy.get(element);
+//      boolean shareParents = false;
+//      for (int j = i+1; j < methods.length && !shareParents; j++) {
+//        String nextElement = (String) methods[j];
+//        List<String> nextElementParents = (List<String>) methodHierarchy.get(nextElement);
+//        for (Iterator iterator = nextElementParents.iterator(); iterator.hasNext() && !shareParents;) {
+//          String parent = (String) iterator.next();
+//          if (elementParents.contains(parent)) {
+//            shareParents = true;
+//          }
 //        }
 //      }
+//      if (!shareParents) {
+//        crosscutingsFound++;
+//      }
 //    }
-//    return notShareParents;
+//    if (crosscutingsFound >= elements.length * percentage / 100 ) {
+//      return true;
+//    }
+    
+    
+    return false;
   }
   
   
