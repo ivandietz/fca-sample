@@ -108,7 +108,7 @@ public class Window {
   private Text classifiedAttributeText;
   private Label elements2;
   private Label classificationNumber;
-  private Combo criteriaCombo;
+//  private Combo criteriaCombo;
   private List<ClassifiedTableItem> classifiedItems = new ArrayList<ClassifiedTableItem>();
   private FCAImplementation fca;
   private Table groupedConceptsTable;
@@ -127,6 +127,7 @@ public class Window {
   private Text percentage;
   private Text elementsMin;
   private Text attributesMin;
+  private Text percentageCrosscutting;
 
   /**
    * Launch the application.
@@ -289,11 +290,12 @@ public class Window {
                 classifiedConceptsTable.removeAll();
                 classifiedDetailsTable.removeAll();
                 classifiedAttributeText.setText("");
-                criteriaCombo.clearSelection();
+//                criteriaCombo.clearSelection();
                 groupedConceptsTable.removeAll();
                 groupedDetailsTable.removeAll();
-                tabFolder.setSelection(2);
                 classificationNumber.setText("Total concepts: ");
+                updateClassifiedConceptsTable(Criteria.CROSSCUTTING_METHOD.getName());
+                tabFolder.setSelection(2);
               }
             });
             btnConfirm.setBounds(10, 463, 103, 25);
@@ -302,10 +304,10 @@ public class Window {
           {
             Group grpLatticeConcepts = new Group(composite, SWT.NONE);
             grpLatticeConcepts.setText("Lattice Concepts");
-            grpLatticeConcepts.setBounds(10, 10, 332, 361);
+            grpLatticeConcepts.setBounds(10, 10, 332, 340);
             {
               resultsTable = new Table(grpLatticeConcepts, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION);
-              resultsTable.setBounds(10, 21, 316, 309);
+              resultsTable.setBounds(10, 21, 316, 288);
               resultsTable.setLinesVisible(true);
               resultsTable.setHeaderVisible(true);
               {
@@ -356,7 +358,7 @@ public class Window {
                     }
                   }
                 });
-                selectAll1.setBounds(10, 336, 49, 15);
+                selectAll1.setBounds(10, 315, 49, 15);
                 selectAll1.setText("<a>Select All</a>");
               }
               {
@@ -370,7 +372,7 @@ public class Window {
                     }
                   }
                 });
-                unselectAll1.setBounds(65, 336, 67, 15);
+                unselectAll1.setBounds(65, 315, 67, 15);
                 unselectAll1.setText("<a>Unselect All</a>");
               }
               resultsTable.addSelectionListener(new SelectionListener() {
@@ -451,67 +453,77 @@ public class Window {
             conceptsNumber.setBounds(200, 468, 167, 15);
           }
           {
-            Group group = new Group(composite, SWT.NONE);
-            group.setBounds(10, 377, 332, 80);
-            group.setText("Classification");
+            Group grpProperties = new Group(composite, SWT.NONE);
+            grpProperties.setBounds(10, 356, 332, 101);
+            grpProperties.setText("Filter configuration");
             {
-              Label label = new Label(group, SWT.NONE);
+              Label label = new Label(grpProperties, SWT.NONE);
               label.setText("Mininum number of elements per concept");
               label.setBounds(10, 44, 239, 15);
             }
             {
-              elementsMin = new Text(group, SWT.BORDER);
+              elementsMin = new Text(grpProperties, SWT.BORDER);
               elementsMin.setText("0");
               elementsMin.setBounds(255, 41, 32, 21);
             }
             {
-              Label label = new Label(group, SWT.NONE);
+              Label label = new Label(grpProperties, SWT.NONE);
               label.setText("Mininum number of attributes per concept");
               label.setBounds(10, 23, 239, 15);
             }
             {
-              attributesMin = new Text(group, SWT.BORDER);
+              attributesMin = new Text(grpProperties, SWT.BORDER);
               attributesMin.setText("0");
               attributesMin.setBounds(255, 20, 32, 21);
+            }
+            {
+              Label lblOfMethods = new Label(grpProperties, SWT.NONE);
+              lblOfMethods.setBounds(10, 65, 239, 15);
+              lblOfMethods.setText("% of methods in different hierarchies");
+            }
+            {
+              percentageCrosscutting = new Text(grpProperties, SWT.BORDER);
+              percentageCrosscutting.setBounds(255, 62, 32, 21);
+              percentageCrosscutting.setText("1");
             }
           }
         }
       }
       {
         TabItem tbtmClassification = new TabItem(tabFolder, SWT.NONE);
-        tbtmClassification.setText("Classification");
+        tbtmClassification.setText("Crosscutting methods");
         {
           Composite composite = new Composite(tabFolder, SWT.NONE);
           tbtmClassification.setControl(composite);
           {
             Group grpConcepts = new Group(composite, SWT.NONE);
-            grpConcepts.setBounds(10, 37, 332, 420);
+            grpConcepts.setBounds(10, 10, 332, 447);
             grpConcepts.setText("Concepts");
-            {
-              criteriaCombo = new Combo(composite, SWT.READ_ONLY);
-              criteriaCombo.setVisibleItemCount(10);
-              criteriaCombo.setBounds(65, 10, 266, 21);
-              Criteria[] criterias = Criteria.values();
-              for (int i = 0; i < criterias.length; i++) {
-                criteriaCombo.add(criterias[i].getName());
-              }
-              criteriaCombo.addSelectionListener(new SelectionListener() {
-                @Override
-                public void widgetDefaultSelected(SelectionEvent e) {
-                  updateClassifiedConceptsTable(criteriaCombo.getText());
-                }
-
-                @Override
-                public void widgetSelected(SelectionEvent e) {
-                  updateClassifiedConceptsTable(criteriaCombo.getText());
-                }
-              });
-            }
+//            {
+//              criteriaCombo = new Combo(composite, SWT.READ_ONLY);
+//              criteriaCombo.setVisibleItemCount(10);
+//              criteriaCombo.setBounds(65, 10, 266, 21);
+//              Criteria[] criterias = Criteria.values();
+//              for (int i = 0; i < criterias.length; i++) {
+//                criteriaCombo.add(criterias[i].getName());
+//              }
+//              criteriaCombo.addSelectionListener(new SelectionListener() {
+//                @Override
+//                public void widgetDefaultSelected(SelectionEvent e) {
+//                  updateClassifiedConceptsTable(criteriaCombo.getText());
+//                }
+//
+//                @Override
+//                public void widgetSelected(SelectionEvent e) {
+//                  updateClassifiedConceptsTable(criteriaCombo.getText());
+//                }
+//              });
+//            }
             {
               classifiedConceptsTable = new Table(grpConcepts, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION);
               classifiedConceptsTable.setLinesVisible(true);
               classifiedConceptsTable.setHeaderVisible(true);
-              classifiedConceptsTable.setBounds(10, 21, 316, 368);
+              classifiedConceptsTable.setBounds(10, 21, 316, 395);
               {
                 TableColumn tblclmnAttributes = new TableColumn(classifiedConceptsTable, SWT.NONE);
                 tblclmnAttributes.setResizable(false);
@@ -567,7 +579,7 @@ public class Window {
                     }
                   }
                 });
-                selectAll2.setBounds(10, 395, 49, 15);
+                selectAll2.setBounds(10, 422, 49, 15);
                 selectAll2.setText("<a>Select All</a>");
               }
               {
@@ -581,7 +593,7 @@ public class Window {
                     }
                   }
                 });
-                unselectAll2.setBounds(65, 395, 67, 15);
+                unselectAll2.setBounds(65, 422, 67, 15);
                 unselectAll2.setText("<a>Unselect All</a>");
               }
               classifiedConceptsTable.addSelectionListener(new SelectionListener() {
@@ -645,22 +657,22 @@ public class Window {
               elements2.setText("# Elements: ");
             }
           }
-          {
-            Label lblCriteria = new Label(composite, SWT.NONE);
-            lblCriteria.setBounds(10, 13, 49, 13);
-            lblCriteria.setText("Criteria");
-          }
-          {
-            Button button = new Button(composite, SWT.NONE);
-            button.addSelectionListener(new SelectionAdapter() {
-              @Override
-              public void widgetSelected(SelectionEvent e) {
-                drawGraph(true,criteriaCombo.getText());                
-              }
-            });
-            button.setBounds(100, 463, 99, 25);
-            button.setText("Show Graph");
-          }
+//          {
+//            Label lblCriteria = new Label(composite, SWT.NONE);
+//            lblCriteria.setBounds(10, 13, 49, 13);
+//            lblCriteria.setText("Criteria");
+//          }
+//          {
+//            Button button = new Button(composite, SWT.NONE);
+//            button.addSelectionListener(new SelectionAdapter() {
+//              @Override
+//              public void widgetSelected(SelectionEvent e) {
+//                drawGraph(true,criteriaCombo.getText());                
+//              }
+//            });
+//            button.setBounds(100, 463, 99, 25);
+//            button.setText("Show Graph");
+//          }
           {
             Button btnChooseColor = new Button(composite, SWT.NONE);
             btnChooseColor.addSelectionListener(new SelectionAdapter() {
@@ -958,7 +970,7 @@ public class Window {
     classifiedConceptsTable.removeAll();
     classifiedDetailsTable.removeAll();
     classifiedAttributeText.setText("");
-    criteriaCombo.clearSelection();
+//    criteriaCombo.clearSelection();
     classifiedItems.clear();
     groupedConceptsTable.removeAll();
     groupedDetailsTable.removeAll();
@@ -1008,7 +1020,7 @@ public class Window {
     classifiedItems.clear();
     for (int i = 0; i < items.length; i++) {
       if (items[i].getChecked() && items[i].getText(0).split(", ").length >= minAttr && items[i].getText(1).split(", ").length >= minElems) {
-        classifiedItems.add(new ClassifiedTableItem(Classifier.classify(items[i], fca.getHierarchy()).getName(), items[i]));
+        classifiedItems.add(new ClassifiedTableItem(Classifier.classify(items[i], fca.getHierarchy(), Float.valueOf(percentageCrosscutting.getText())).getName(), items[i]));
       }
     }
   }
