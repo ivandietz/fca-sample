@@ -94,6 +94,10 @@ public final class WordNetUtils {
       antonyms.add("remove");
     if (word.equals("remove"))
       antonyms.add("add");
+    if (word.equals("redo"))
+      antonyms.add("undo");
+    if (word.equals("undo"))
+      antonyms.add("redo");
     
     return antonyms;
   }

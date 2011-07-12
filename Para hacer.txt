@@ -1,4 +1,3 @@
 - Mejorar agrupamientos (?)
 - agregar imagen o algo a la 1er pestaña
 - agregar "Acerca de" o nuestros nombres en algun lugar
-- "limpiar" total de elementos al hacer una nueva clasificacion
