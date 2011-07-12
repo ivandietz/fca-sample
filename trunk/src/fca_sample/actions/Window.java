@@ -295,6 +295,9 @@ public class Window {
                 groupedDetailsTable.removeAll();
                 classificationNumber.setText("Total concepts: ");
                 updateClassifiedConceptsTable(Criteria.CROSSCUTTING_METHOD.getName());
+                elements1.setText("# Elements: ");
+                elements2.setText("# Elements: ");
+                elements3.setText("# Elements: ");
                 tabFolder.setSelection(2);
               }
             });
@@ -662,17 +665,17 @@ public class Window {
 //            lblCriteria.setBounds(10, 13, 49, 13);
 //            lblCriteria.setText("Criteria");
 //          }
-//          {
-//            Button button = new Button(composite, SWT.NONE);
-//            button.addSelectionListener(new SelectionAdapter() {
-//              @Override
-//              public void widgetSelected(SelectionEvent e) {
-//                drawGraph(true,criteriaCombo.getText());                
-//              }
-//            });
-//            button.setBounds(100, 463, 99, 25);
-//            button.setText("Show Graph");
-//          }
+          {
+            Button button = new Button(composite, SWT.NONE);
+            button.addSelectionListener(new SelectionAdapter() {
+              @Override
+              public void widgetSelected(SelectionEvent e) {
+                drawGraph(true, Criteria.CROSSCUTTING_METHOD.getName());                
+              }
+            });
+            button.setBounds(100, 463, 99, 25);
+            button.setText("Show Graph");
+          }
           {
             Button btnChooseColor = new Button(composite, SWT.NONE);
             btnChooseColor.addSelectionListener(new SelectionAdapter() {
@@ -974,6 +977,9 @@ public class Window {
     classifiedItems.clear();
     groupedConceptsTable.removeAll();
     groupedDetailsTable.removeAll();
+    elements1.setText("# Elements: ");
+    elements2.setText("# Elements: ");
+    elements3.setText("# Elements: ");
     
     // Fill results table
     TableItem item = null;
@@ -1029,6 +1035,9 @@ public class Window {
     classifiedConceptsTable.removeAll();
     classifiedDetailsTable.removeAll();
     classifiedAttributeText.setText("");
+    elements1.setText("# Elements: ");
+    elements2.setText("# Elements: ");
+    elements3.setText("# Elements: ");
 
     TableItem item = null;
     for (Iterator iterator = classifiedItems.iterator(); iterator.hasNext();) {
@@ -1111,6 +1120,9 @@ public class Window {
     groupedConceptsTable.removeAll();
     groupedDetailsTable.removeAll();
     groupedAttributesText.setText("");
+    elements1.setText("# Elements: ");
+    elements2.setText("# Elements: ");
+    elements3.setText("# Elements: ");
     
     // Fill results table
     Set<String> keySet = groupedConcepts.keySet();
