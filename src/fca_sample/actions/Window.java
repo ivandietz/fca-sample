@@ -91,9 +91,6 @@ public class Window {
   private Combo projectsCombo;
   private Tree tree;
   private HashMap<String, TreeItem> packagesMap;
-  private Button btnClasses;
-  private Button btnMethods;
-  private Button btnParameters;
   private Label lblRunning;
   private Map<String, IProject> projectsMap;
   private Table resultsTable;
@@ -203,7 +200,7 @@ public class Window {
                 if (!projectsCombo.getText().equals("")) {
                   try {
                     lblRunning.setText("Running...");
-                    fca = new FCAImplementation(projectsMap.get(projectsCombo.getText()), btnClasses.getSelection(), btnMethods.getSelection(), btnParameters.getSelection(), packagesMap);
+                    fca = new FCAImplementation(projectsMap.get(projectsCombo.getText()), false, true, false, packagesMap);
                     showResults(fca.getConcepts());
                     lblRunning.setText("");
                     tabFolder.setSelection(1);
@@ -214,31 +211,8 @@ public class Window {
                 }
               }
             });
-            btnRunFcaAlgorithm.setBounds(10, 140, 244, 23);
+            btnRunFcaAlgorithm.setBounds(10, 71, 316, 23);
             btnRunFcaAlgorithm.setText("Run FCA Algorithm");
-          }
-          {
-            Group grpCodeElements = new Group(composite, SWT.NONE);
-            grpCodeElements.setText("Code Elements");
-            grpCodeElements.setBounds(10, 82, 316, 52);
-            {
-              btnClasses = new Button(grpCodeElements, SWT.CHECK);
-              btnClasses.setBounds(10, 20, 85, 16);
-              btnClasses.setSelection(true);
-              btnClasses.setText("Classes");
-            }
-            {
-              btnMethods = new Button(grpCodeElements, SWT.CHECK);
-              btnMethods.setBounds(101, 20, 85, 16);
-              btnMethods.setSelection(true);
-              btnMethods.setText("Methods");
-            }
-            {
-              btnParameters = new Button(grpCodeElements, SWT.CHECK);
-              btnParameters.setBounds(192, 20, 85, 16);
-              btnParameters.setSelection(true);
-              btnParameters.setText("Parameters");
-            }
           }
           {
             Label lblSelectProject = new Label(composite, SWT.NONE);
@@ -248,7 +222,7 @@ public class Window {
           {
             lblRunning = new Label(composite, SWT.NONE);
             lblRunning.setFont(SWTResourceManager.getFont("Tahoma", 8, SWT.BOLD));
-            lblRunning.setBounds(260, 145, 66, 13);
+            lblRunning.setBounds(10, 100, 66, 13);
           }
           {
             {
@@ -415,11 +389,6 @@ public class Window {
                 TableColumn tblclmnMethodName = new TableColumn(detailsTable, SWT.NONE);
                 tblclmnMethodName.setWidth(172);
                 tblclmnMethodName.setText("Method Name");
-              }
-              {
-                TableColumn tblclmnParameterName = new TableColumn(detailsTable, SWT.NONE);
-                tblclmnParameterName.setWidth(142);
-                tblclmnParameterName.setText("Parameter Name");
               }
             }
             {
@@ -637,11 +606,6 @@ public class Window {
                 tableColumn.setWidth(172);
                 tableColumn.setText("Method Name");
               }
-              {
-                TableColumn tableColumn = new TableColumn(classifiedDetailsTable, SWT.NONE);
-                tableColumn.setWidth(142);
-                tableColumn.setText("Parameter Name");
-              }
             }
             {
               classifiedAttributeText = new Text(grpConceptDetailselements_1, SWT.BORDER);
@@ -831,11 +795,6 @@ public class Window {
                 TableColumn tableColumn = new TableColumn(groupedDetailsTable, SWT.NONE);
                 tableColumn.setWidth(172);
                 tableColumn.setText("Method Name");
-              }
-              {
-                TableColumn tableColumn = new TableColumn(groupedDetailsTable, SWT.NONE);
-                tableColumn.setWidth(142);
-                tableColumn.setText("Parameter Name");
               }
             }
             {
