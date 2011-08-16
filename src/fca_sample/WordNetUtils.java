@@ -70,6 +70,12 @@ public final class WordNetUtils {
           synonyms.add(wordForms[j]);
       }
     }
+    
+    if (word.equals("write"))
+    	synonyms.add("store");
+      if (word.equals("store"))
+    	synonyms.add("write");
+      
     return synonyms;
   }
   
@@ -98,6 +104,10 @@ public final class WordNetUtils {
       antonyms.add("undo");
     if (word.equals("undo"))
       antonyms.add("redo");
+    if (word.equals("read"))
+        antonyms.add("write");
+      if (word.equals("write"))
+        antonyms.add("read");
     
     return antonyms;
   }
