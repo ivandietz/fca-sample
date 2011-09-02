@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.geom.Ellipse2D;
+import java.lang.reflect.Array;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -1073,7 +1074,15 @@ public class Window {
     filterItems(crosscutingItems);
     
     // Agrupamos los conceptos semanticamente relacionados
+    groupedConceptsMap = new HashMap<String, String>();
     Map<String, String> groupedConcepts = groupConcepts(crosscutingItems);
+    int oldSize = 0;
+    int newSize = groupedConcepts.size();
+    while (oldSize != newSize) {
+      oldSize = newSize;
+      groupedConcepts = groupConcepts(groupedConcepts);
+      newSize = groupedConcepts.size();
+    }
     
     // Clear tables
     groupedConceptsTable.removeAll();
@@ -1161,7 +1170,6 @@ public class Window {
     Map<String, String> returnMap = new HashMap<String, String>();
     Set<String> attributesSet = items.keySet();
     String[] attributesArray = attributesSet.toArray(new String[0]);
-    groupedConceptsMap = new HashMap<String, String>();
     for (int i = 0; i < attributesArray.length; i++) {
       //si esta en blanco ya fue usado...
       boolean used = attributesArray[i].equals("");
@@ -1288,6 +1296,14 @@ public class Window {
         groupedGraph.addEdge(String.valueOf(edgeCount), "[]", "[" + items[i].getText(0) + "]");
         edgeCount++;
         String[] childs = groupedConceptsMap.get(items[i].getText(0)).split(":");
+        //"explotar" los childs hasta llegar a los conceptos originales (antes que fueran agrupados)
+        int oldSize = 0;
+        int newSize = childs.length;
+        while (oldSize != newSize) {
+          oldSize = newSize;
+          childs = exploteChilds(childs);
+          newSize = childs.length;
+        }
         for (int j = 0; j < childs.length; j++) {
           groupedGraph.addVertex("[" + childs[j] + "]", Color.GREEN);                    
           vertexMessages.put("[" + childs[j] + "]", "[" + crosscutingItems.get(childs[j]) + "]");
@@ -1303,6 +1319,22 @@ public class Window {
     }
     
     draw(groupedGraph, false, "Grouped Crosscuting Concepts", vertexMessages);
+  }
+  
+  public String[] exploteChilds(String[] childs) {
+    ArrayList<String> explotedChilds = new ArrayList<String>();
+    for (int j = 0; j < childs.length; j++) {
+      if (groupedConceptsMap.containsKey(childs[j])) {
+        String[] children = groupedConceptsMap.get(childs[j]).split(":");
+        for (int i = 0; i < children.length; i++) {
+          explotedChilds.add(children[i]);
+        }
+      } else {
+        explotedChilds.add(childs[j]);
+      }
+    }
+    String[] temp = new String[explotedChilds.size()];
+    return explotedChilds.toArray(temp);
   }
   
   public void draw(DelegateForestColor<String, String> f, boolean paintClassification, String frameName, Map<String, String> vertexMessages){
