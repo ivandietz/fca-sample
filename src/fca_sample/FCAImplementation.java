@@ -31,7 +31,8 @@ public class FCAImplementation {
 
   private Lattice lattice = null;
   List<Concept> concepts = null;
-  private HashMap<String, String> hierarchy = null;  
+  private HashMap<String, String> hierarchy = null; 
+  private Relation rel;
 
   public FCAImplementation(IProject project, boolean useClasses,
       boolean useMethods, boolean useParams, HashMap packagesMap) throws CoreException {
@@ -44,7 +45,7 @@ public class FCAImplementation {
 
   private void createLattice(IJavaProject javaProject, boolean useClasses,
       boolean useMethods, boolean useParams, HashMap<String, TreeItem> packagesMap) throws JavaModelException {
-    Relation rel = new TreeRelation();
+    rel = new TreeRelation();
     Pattern p = Pattern.compile("[a-zA-Z]{1}[a-z]*");
     Matcher matcher;
 
@@ -111,6 +112,14 @@ public class FCAImplementation {
   
   public Lattice getLattice() {
     return lattice;
+  }
+  
+  public int getTotalAttributes() {
+    return rel.getSizeAttributes();
+  }
+  
+  public int getTotalElements() {
+    return rel.getSizeObjects();
   }
 
 }

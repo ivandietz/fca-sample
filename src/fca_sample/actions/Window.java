@@ -100,6 +100,8 @@ public class Window {
   private Text attributesText;
   private Label elements1;
   private Label conceptsNumber;
+  private Label totalAttributes;
+  private Label totalElements;
   private Table classifiedConceptsTable;
   private boolean classifiedConceptsTableOrderAscendant = true;
   private Table classifiedDetailsTable;
@@ -206,6 +208,8 @@ public class Window {
                     lblRunning.setText("");
                     tabFolder.setSelection(1);
                     conceptsNumber.setText("Total concepts: " + String.valueOf(fca.getConcepts().size()));
+                    totalAttributes.setText("Total attributes: " + String.valueOf(fca.getTotalAttributes()));
+                    totalElements.setText("Total elements: " + String.valueOf(fca.getTotalElements()));
                   } catch (CoreException e1) {
                     e1.printStackTrace();
                   }
@@ -423,7 +427,7 @@ public class Window {
           {
             conceptsNumber = new Label(composite, SWT.NONE);
             conceptsNumber.setText("Total concepts: ");
-            conceptsNumber.setBounds(200, 468, 167, 15);
+            conceptsNumber.setBounds(200, 468, 152, 15);
           }
           {
             Group grpProperties = new Group(composite, SWT.NONE);
@@ -460,6 +464,14 @@ public class Window {
               percentageCrosscutting.setText("1");
             }
           }
+          
+          totalAttributes = new Label(composite, SWT.NONE);
+          totalAttributes.setBounds(358, 468, 136, 15);
+          totalAttributes.setText("Total Attributes: ");
+          
+          totalElements = new Label(composite, SWT.NONE);
+          totalElements.setBounds(533, 468, 165, 15);
+          totalElements.setText("Total Elements:");
         }
       }
       {
