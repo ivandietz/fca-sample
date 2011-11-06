@@ -30,6 +30,9 @@ import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -120,6 +123,9 @@ public class Window {
   private Map<String, String> groupedConceptsMap;
   private Label groupedNumber;
   private Map<String, String> crosscutingItems;
+  Display display;
+  Clipboard clipboard;
+  String copyData;
   
   //Elements for GraphViewer
   public JList attributesList;
@@ -148,7 +154,7 @@ public class Window {
    * Open the window.
    */
   public void open() {
-    Display display = Display.getDefault();
+    display = Display.getDefault();
     createContents();
     shlFcaSample.open();
     shlFcaSample.layout();
@@ -605,7 +611,7 @@ public class Window {
             grpConceptDetailselements_1.setBounds(348, 10, 626, 447);
             grpConceptDetailselements_1.setText("Concept Details (elements)");
             {
-              classifiedDetailsTable = new Table(grpConceptDetailselements_1, SWT.BORDER | SWT.FULL_SELECTION);
+              classifiedDetailsTable = new Table(grpConceptDetailselements_1, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
               classifiedDetailsTable.setLinesVisible(true);
               classifiedDetailsTable.setHeaderVisible(true);
               classifiedDetailsTable.setBounds(10, 46, 606, 391);
@@ -680,6 +686,21 @@ public class Window {
             classificationNumber = new Label(composite, SWT.NONE);
             classificationNumber.setBounds(205, 468, 167, 15);
             classificationNumber.setText("Total concepts: ");
+          }
+          {
+            Button btnCopy = new Button(composite, SWT.NONE);
+            btnCopy.addSelectionListener(new SelectionAdapter() {
+              @Override
+              public void widgetSelected(SelectionEvent e) {
+                clipboard = new Clipboard(display);               
+                if (copyData.length() > 0) { 
+                  TextTransfer textTransfer = TextTransfer.getInstance();
+                  clipboard.setContents(new Object[] {copyData}, new Transfer[] {textTransfer});     
+                }
+              }
+            });
+            btnCopy.setBounds(899, 458, 75, 25);
+            btnCopy.setText("Copy");
           }
 
         }
@@ -972,16 +993,19 @@ public class Window {
     TableItem item = null;
     String elementList = tableItem.getText(1);
     String[] elements = elementList.split(", ");
+    copyData = "";
     for (int i = 0; i < elements.length; i++) {
       item = new TableItem(table, SWT.NONE);
       String element = elements[i];
-      String components[] = element.split(":");
+      String components[] = element.split(":");      
       for (int j = 0; j < components.length; j++) {
+        copyData = copyData.concat(components[j]+"\t");
         item.setText(j, components[j]);
         if (j == components.length - 1)
           item.setFont(j, new org.eclipse.swt.graphics.Font(Display.getCurrent(), "", 10, SWT.BOLD));
       }
-    }
+      copyData = copyData.concat("\n");
+    }    
     for (int i = 0; i < table.getColumnCount(); i++)
       table.getColumn(i).pack();
     shlFcaSample.update();
