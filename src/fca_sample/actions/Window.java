@@ -692,7 +692,7 @@ public class Window {
             btnCopy.addSelectionListener(new SelectionAdapter() {
               @Override
               public void widgetSelected(SelectionEvent e) {
-                clipboard = new Clipboard(display);               
+                clipboard = new Clipboard(display);  
                 if (copyData.length() > 0) { 
                   TextTransfer textTransfer = TextTransfer.getInstance();
                   clipboard.setContents(new Object[] {copyData}, new Transfer[] {textTransfer});     
