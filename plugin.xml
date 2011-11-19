@@ -7,7 +7,7 @@
       <actionSet
             label="Sample Action Set"
             visible="true"
-            id="FCA_Sample.actionSet">
+            id="Semantic_FCA.actionSet">
          <menu
                label="Aspect &amp;Mining"
                id="sampleMenu">
@@ -16,10 +16,10 @@
             </separator>
          </menu>
          <action
-               label="&amp;FCA Tool"
+               label="&amp;Semantic FCA"
                icon="icons/sample.gif"
-               class="fca_sample.actions.SampleAction"
-               tooltip="FCA Tool for Aspect Mining"
+               class="semantic_fca.actions.SampleAction"
+               tooltip="Semantic FCA"
                menubarPath="sampleMenu/sampleGroup"
                toolbarPath="sampleGroup"
                id="fca_sample.actions.SampleAction">

@@ -1,4 +1,4 @@
-package fca_sample;
+package semantic_fca;
 
 public enum Criteria {
 	CLASS_NAME_IN_KEYBOARD ("Class Name in Keyboard"),

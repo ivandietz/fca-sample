@@ -1,4 +1,4 @@
-package fca_sample;
+package semantic_fca;
 
 import java.util.ArrayList;
 import java.util.Arrays;

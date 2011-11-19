@@ -1,4 +1,4 @@
-package fca_sample;
+package semantic_fca;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;

@@ -1,4 +1,4 @@
-package fca_sample.actions;
+package semantic_fca.actions;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
