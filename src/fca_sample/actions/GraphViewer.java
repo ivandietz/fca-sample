@@ -79,7 +79,7 @@ public class GraphViewer extends JFrame {
       contentPane.add(lblAttributes);
     }
     {
-      JLabel lblElements = new JLabel("Elements (Class | Method | Param)");
+      JLabel lblElements = new JLabel("Elements (Class | Method)");
       lblElements.setBounds(19, 348, 244, 14);
       contentPane.add(lblElements);
     }
