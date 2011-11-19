@@ -1,4 +1,4 @@
-package fca_sample.actions;
+package semantic_fca.actions;
 
 import java.awt.Color;
 

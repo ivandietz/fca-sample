@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: FCA for Aspect Mining Plug-in
-Bundle-SymbolicName: FCA_Aspect_Mining;singleton:=true
+Bundle-Name: Semantic FCA
+Bundle-SymbolicName: Semantic_FCA;singleton:=true
 Bundle-Version: 1.0.1
-Bundle-Activator: fca_sample.Activator
+Bundle-Activator: semantic_fca.Activator
 Require-Bundle: org.eclipse.ui;bundle-version="3.4.0",
  org.eclipse.core.runtime;bundle-version="3.4.0",
  org.eclipse.jdt;bundle-version="3.4.0",

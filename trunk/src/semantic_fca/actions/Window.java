@@ -1,10 +1,9 @@
-package fca_sample.actions;
+package semantic_fca.actions;
 
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.geom.Ellipse2D;
-import java.lang.reflect.Array;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,6 +46,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
@@ -58,6 +58,13 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
+
+import semantic_fca.ClassifiedTableItem;
+import semantic_fca.Classifier;
+import semantic_fca.Criteria;
+import semantic_fca.FCAImplementation;
+import semantic_fca.TreeUtils;
+import semantic_fca.WordNetUtils;
 
 import Grafo.BasicRendererColor;
 import Grafo.DelegateForestColor;
@@ -75,13 +82,6 @@ import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ScalingGraphMousePlugin;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 import edu.uci.ics.jung.visualization.renderers.Renderer;
-import fca_sample.ClassifiedTableItem;
-import fca_sample.Classifier;
-import fca_sample.Criteria;
-import fca_sample.FCAImplementation;
-import fca_sample.TreeUtils;
-import fca_sample.WordNetUtils;
-import org.eclipse.swt.widgets.Link;
 
 /**
  * 
@@ -171,7 +171,7 @@ public class Window {
   protected void createContents() {
     shlFcaSample = new Shell(SWT.MIN);
     shlFcaSample.setSize(1000, 568);
-    shlFcaSample.setText("FCA Tool for Aspect Mining");
+    shlFcaSample.setText("Semantic FCA");
     {
       tabFolder = new TabFolder(shlFcaSample, SWT.NONE);
       tabFolder.setBounds(0, 10, 992, 530);
@@ -1105,12 +1105,12 @@ public class Window {
    */
   void groupCrosscuttingMethods(){
     crosscutingItems = getCrosscuttingItems();
+    groupedConceptsMap = new HashMap<String, String>();
     
     // Filtramos elementos incluidos en otro concepto
     filterItems(crosscutingItems);
     
     // Agrupamos los conceptos semanticamente relacionados
-    groupedConceptsMap = new HashMap<String, String>();
     Map<String, String> groupedConcepts = groupConcepts(crosscutingItems);
     int oldSize = 0;
     int newSize = groupedConcepts.size();
@@ -1137,7 +1137,7 @@ public class Window {
       item.setText(0, key);
       item.setText(1, groupedConcepts.get(key));
       if(groupedConceptsMap.containsKey(item.getText(0))){
-        item.setBackground(2, new org.eclipse.swt.graphics.Color(Display.getCurrent(), 0, 255, 255));
+        item.setBackground(2, new org.eclipse.swt.graphics.Color(Display.getCurrent(), 255, 201, 14));
       } else {
         item.setBackground(2, new org.eclipse.swt.graphics.Color(Display.getCurrent(), 0, 255, 0));
       }
@@ -1170,10 +1170,16 @@ public class Window {
     String[] attributesArray = attributesSet.toArray(new String[0]);
     for (int i = 0; i < attributesArray.length; i++) {
       for (int j = i + 1; j < attributesArray.length; j++) {
-        if (isIncluded(attributesArray[i], attributesArray[j]))
+        if (isIncluded(attributesArray[i], attributesArray[j])) {
           items.remove(attributesArray[j]);
-        if (isIncluded(attributesArray[j], attributesArray[i]))
+          groupedConceptsMap.put(attributesArray[i], groupedConceptsMap.get(attributesArray[i]) + ":" + attributesArray[j]);
+          attributesArray[j] = "";
+        }
+        if (isIncluded(attributesArray[j], attributesArray[i])) {
           items.remove(attributesArray[i]);
+          groupedConceptsMap.put(attributesArray[j], groupedConceptsMap.get(attributesArray[j]) + ":" + attributesArray[i]);
+          attributesArray[i] = "";
+        }
       }
     }
   }
