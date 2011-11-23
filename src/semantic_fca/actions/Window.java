@@ -65,7 +65,6 @@ import semantic_fca.Criteria;
 import semantic_fca.FCAImplementation;
 import semantic_fca.TreeUtils;
 import semantic_fca.WordNetUtils;
-
 import Grafo.BasicRendererColor;
 import Grafo.DelegateForestColor;
 import colibri.lib.Concept;
@@ -1172,13 +1171,19 @@ public class Window {
       for (int j = i + 1; j < attributesArray.length; j++) {
         if (isIncluded(attributesArray[i], attributesArray[j])) {
           items.remove(attributesArray[j]);
-          groupedConceptsMap.put(attributesArray[i], groupedConceptsMap.get(attributesArray[i]) + ":" + attributesArray[j]);
-          attributesArray[j] = "";
+          if (groupedConceptsMap.get(attributesArray[i]) != null && !groupedConceptsMap.get(attributesArray[i]).equals(""))
+            groupedConceptsMap.put(attributesArray[i], groupedConceptsMap.get(attributesArray[i]) + ":" + attributesArray[j]);
+          else
+            groupedConceptsMap.put(attributesArray[i], attributesArray[j]);
+//          attributesArray[j] = "";
         }
         if (isIncluded(attributesArray[j], attributesArray[i])) {
           items.remove(attributesArray[i]);
-          groupedConceptsMap.put(attributesArray[j], groupedConceptsMap.get(attributesArray[j]) + ":" + attributesArray[i]);
-          attributesArray[i] = "";
+          if (groupedConceptsMap.get(attributesArray[j]) != null && !groupedConceptsMap.get(attributesArray[j]).equals(""))
+            groupedConceptsMap.put(attributesArray[j], groupedConceptsMap.get(attributesArray[j]) + ":" + attributesArray[i]);
+          else
+            groupedConceptsMap.put(attributesArray[j], attributesArray[i]);
+//          attributesArray[i] = "";
         }
       }
     }
