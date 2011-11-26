@@ -104,6 +104,9 @@ public class Window {
   private Label conceptsNumber;
   private Label totalAttributes;
   private Label totalElements;
+  private Text elementsMin;
+  private Text attributesMin;
+  private Text includeAttribute;
   private Table classifiedConceptsTable;
   private boolean classifiedConceptsTableOrderAscendant = true;
   private Table classifiedDetailsTable;
@@ -122,17 +125,16 @@ public class Window {
   private Map<String, String> groupedConceptsMap;
   private Label groupedNumber;
   private Map<String, String> crosscutingItems;
-  Display display;
-  Clipboard clipboard;
-  String copyData;
+  private Text percentage;
+  private Text percentageCrosscutting;
+  private Display display;
+  private Clipboard clipboard;
+  private String copyData;
   
   //Elements for GraphViewer
   public JList attributesList;
   public JList elementsList;
-  private Text percentage;
-  private Text elementsMin;
-  private Text attributesMin;
-  private Text percentageCrosscutting;
+  
 
   /**
    * Launch the application.
@@ -468,6 +470,9 @@ public class Window {
               percentageCrosscutting.setBounds(255, 62, 32, 21);
               percentageCrosscutting.setText("1");
             }
+            
+            includeAttribute = new Text(grpProperties, SWT.BORDER);
+            includeAttribute.setBounds(255, 0, 64, 19);
           }
           
           totalAttributes = new Label(composite, SWT.NONE);
@@ -1013,14 +1018,16 @@ public class Window {
   private void classifyConcepts(TableItem[] items) {
     int minAttr = 0;
     int minElems = 0;
+    String includeAttr = "";
     try {
       minAttr = Integer.valueOf(attributesMin.getText());
       minElems = Integer.valueOf(elementsMin.getText());
+      includeAttr = includeAttribute.getText();
     } catch (NumberFormatException e){
     }
     classifiedItems.clear();
     for (int i = 0; i < items.length; i++) {
-      if (items[i].getChecked() && items[i].getText(0).split(", ").length >= minAttr && items[i].getText(1).split(", ").length >= minElems) {
+      if (items[i].getChecked() && items[i].getText(0).split(", ").length >= minAttr && items[i].getText(1).split(", ").length >= minElems && items[i].getText(0).contains(includeAttr)) {
         classifiedItems.add(new ClassifiedTableItem(Classifier.classify(items[i], fca.getHierarchy(), Float.valueOf(percentageCrosscutting.getText())).getName(), items[i]));
       }
     }
