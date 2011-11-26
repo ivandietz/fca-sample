@@ -1027,7 +1027,7 @@ public class Window {
     }
     classifiedItems.clear();
     for (int i = 0; i < items.length; i++) {
-      if (items[i].getChecked() && items[i].getText(0).split(", ").length >= minAttr && items[i].getText(1).split(", ").length >= minElems && items[i].getText(0).contains(includeAttr)) {
+      if (items[i].getChecked() && items[i].getText(0).split(", ").length >= minAttr && items[i].getText(1).split(", ").length >= minElems && (includeAttr.equals("") || isIncluded(includeAttr, items[i].getText(0)))) {
         classifiedItems.add(new ClassifiedTableItem(Classifier.classify(items[i], fca.getHierarchy(), Float.valueOf(percentageCrosscutting.getText())).getName(), items[i]));
       }
     }
