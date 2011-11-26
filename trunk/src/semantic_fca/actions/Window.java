@@ -293,10 +293,10 @@ public class Window {
           {
             Group grpLatticeConcepts = new Group(composite, SWT.NONE);
             grpLatticeConcepts.setText("Lattice Concepts");
-            grpLatticeConcepts.setBounds(10, 10, 332, 340);
+            grpLatticeConcepts.setBounds(10, 10, 332, 322);
             {
               resultsTable = new Table(grpLatticeConcepts, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION);
-              resultsTable.setBounds(10, 21, 316, 288);
+              resultsTable.setBounds(10, 21, 316, 273);
               resultsTable.setLinesVisible(true);
               resultsTable.setHeaderVisible(true);
               {
@@ -347,7 +347,7 @@ public class Window {
                     }
                   }
                 });
-                selectAll1.setBounds(10, 315, 49, 15);
+                selectAll1.setBounds(10, 300, 49, 15);
                 selectAll1.setText("<a>Select All</a>");
               }
               {
@@ -361,7 +361,7 @@ public class Window {
                     }
                   }
                 });
-                unselectAll1.setBounds(65, 315, 67, 15);
+                unselectAll1.setBounds(66, 300, 67, 15);
                 unselectAll1.setText("<a>Unselect All</a>");
               }
               resultsTable.addSelectionListener(new SelectionListener() {
@@ -438,41 +438,46 @@ public class Window {
           }
           {
             Group grpProperties = new Group(composite, SWT.NONE);
-            grpProperties.setBounds(10, 356, 332, 101);
+            grpProperties.setBounds(10, 338, 332, 119);
             grpProperties.setText("Filter configuration");
             {
               Label label = new Label(grpProperties, SWT.NONE);
               label.setText("Mininum number of elements per concept");
-              label.setBounds(10, 44, 239, 15);
+              label.setBounds(27, 70, 239, 15);
             }
             {
               elementsMin = new Text(grpProperties, SWT.BORDER);
               elementsMin.setText("0");
-              elementsMin.setBounds(255, 41, 32, 21);
+              elementsMin.setBounds(272, 67, 32, 21);
             }
             {
               Label label = new Label(grpProperties, SWT.NONE);
               label.setText("Mininum number of attributes per concept");
-              label.setBounds(10, 23, 239, 15);
+              label.setBounds(27, 49, 239, 15);
             }
             {
               attributesMin = new Text(grpProperties, SWT.BORDER);
               attributesMin.setText("0");
-              attributesMin.setBounds(255, 20, 32, 21);
+              attributesMin.setBounds(272, 46, 32, 21);
             }
             {
               Label lblOfMethods = new Label(grpProperties, SWT.NONE);
-              lblOfMethods.setBounds(10, 65, 239, 15);
+              lblOfMethods.setBounds(27, 91, 239, 15);
               lblOfMethods.setText("% of methods in different hierarchies");
             }
             {
               percentageCrosscutting = new Text(grpProperties, SWT.BORDER);
-              percentageCrosscutting.setBounds(255, 62, 32, 21);
+              percentageCrosscutting.setBounds(272, 88, 32, 21);
               percentageCrosscutting.setText("1");
             }
             
             includeAttribute = new Text(grpProperties, SWT.BORDER);
-            includeAttribute.setBounds(255, 0, 64, 19);
+            includeAttribute.setBounds(119, 24, 185, 19);
+            {
+              Label lblIncludedAtribute = new Label(grpProperties, SWT.NONE);
+              lblIncludedAtribute.setBounds(27, 24, 98, 15);
+              lblIncludedAtribute.setText("Include atribute");
+            }
           }
           
           totalAttributes = new Label(composite, SWT.NONE);
