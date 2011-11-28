@@ -104,6 +104,18 @@ public final class WordNetUtils {
       antonyms.add("undo");
     if (word.equals("undo"))
       antonyms.add("redo");
+    if (word.equals("redoable"))
+        antonyms.add("undoabe");
+    if (word.equals("undoable"))
+        antonyms.add("redoable");
+    if (word.equals("undoable"))
+        antonyms.add("undo");
+    if (word.equals("undo"))
+        antonyms.add("undoable");
+    if (word.equals("redoable"))
+        antonyms.add("redo");
+    if (word.equals("redo"))
+        antonyms.add("redoable");
     if (word.equals("read"))
         antonyms.add("write");
       if (word.equals("write"))
